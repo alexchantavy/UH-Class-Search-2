@@ -104,6 +104,9 @@ var SampleApp = function() {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );
         };
+        self.routes['/herp'] = function(req, res) {
+            res.send("<html><head><h1>Herp</h1><</h1></head></html>");
+        };
     };
 
 

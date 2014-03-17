@@ -105,7 +105,7 @@ var SampleApp = function() {
             res.send(self.cache_get('index.html') );
         };
 
-        self.routes['herp'] = function(req, res) {
+        self.routes['/herp'] = function(req, res) {
             res.send('<h1>Herp</h1>');
         };
     };

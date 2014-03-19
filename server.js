@@ -32,7 +32,7 @@ app.configure(function() {
 // set up the routes
 app.get('/', function(req, res) {
   res.render('index', {layout: 'layout', title: 'Herp'});
-})
+});
 
 // env vars
 var ipaddr = process.env.OPENSHIFT_NODEJS_IP;

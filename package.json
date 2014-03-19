@@ -1,18 +1,22 @@
+
 {
-  "name": "OpenShift-Sample-App",
+  "name": "OpenShift Test App",
   "version": "1.0.0",
   "description": "OpenShift Sample Application",
+
   "keywords": [
     "OpenShift",
     "Node.js",
     "application",
     "openshift"
   ],
+
   "author": {
-    "name": "OpenShift",
-    "email": "ramr@example.org",
-    "url": "http://www.openshift.com/"
+    "name": "Alex Chantavy",
+    "email": "chantavy@gmail.com",
+    "url": "herpderp"
   },
+
   "homepage": "http://www.openshift.com/",
   "repository": {
     "type": "git",
@@ -21,8 +25,7 @@
 
   "engines": {
     "node": ">= 0.6.0",
-    "npm": ">= 1.0.0",
-    "jade": "*"
+    "npm": ">= 1.0.0"
   },
 
   "dependencies": {

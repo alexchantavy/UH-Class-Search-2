@@ -29,12 +29,15 @@
   },
 
   "dependencies": {
-    "express": "~3.4.4"
-    , "stylus":  "0.29.x"
-    , "jade":    "0.27.x"
-    , "jquery":  "1.7.x"
+    "express": "~3.4.4",
+    "stylus":  "0.29.x",
+    "jade":    "0.27.x",
+    "jquery":  "1.7.x"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  },
   "bundleDependencies": [],
 
   "private": true,

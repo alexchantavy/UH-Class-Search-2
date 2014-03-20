@@ -6,7 +6,8 @@ var stylus  = require('stylus');
 
 var app = express();
 
-// set up the app
+// standard expressjs config, only thing different is that it 
+// references OPENSHIFT_REPO_DIR.
 app.configure(function() {
   app.set('views', process.env.OPENSHIFT_REPO_DIR + 'views');
   app.set('view engine', 'jade');

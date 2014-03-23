@@ -28,9 +28,14 @@ var departments = ["ACC", "ACM", "AMST", "ANAT",
         "TRMD", "VIET", "WS", "ZOOL"];
 
 
+var getDepartmentCourses = function() {
+  _fetchCourseData.call(this, 'ICS', function(data) {
+    console.log(JSON.stringify(data, undefined, 2));
+  });
+};
 
 
-function getData(dept, callback) {
+var _fetchCourseData = function(dept, callback) {
   var url = 'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=' + dept;
 
   // Open UH class listing 
@@ -38,8 +43,8 @@ function getData(dept, callback) {
     if (status === 'success') {
 
       var result = page.evaluate(function() {
-        var rows = document.querySelectorAll('table.listOfClasses tr')
 
+        var rows = document.querySelectorAll('table.listOfClasses tr')
         var catalog = [];
 
         // Iterate through the <tr>s starting at index 2 to skip the header rows.
@@ -79,27 +84,21 @@ function getData(dept, callback) {
             course['mtgTime'].push({
                                     // '7' because for some reason theres 1 less <td>
                                     // in new columns
-                                    'days' : rows[i].cells[7].textContent,
+                                    'days'  : rows[i].cells[7].textContent,
                                     'time'  : rows[i].cells[8].textContent,
                                     'loc'   : rows[i].cells[9].textContent,
                                     'dates' : rows[i].cells[10].textContent
                                   });
           }
-
           catalog.push(course);
         } // </For>
         return catalog;
-      }); // </var result = page.evaluate();?
-
-      //console.log(JSON.stringify(result, undefined, 2));
+      }); // </var result = page.evaluate()>
       callback(result);
     }
     phantom.exit();
   });
-}
+};
 
 
-//getData('ICS', function(data) {
-//  console.log(JSON.stringify(data, undefined, 2));
-//});
-
+getDepartmentCourses();

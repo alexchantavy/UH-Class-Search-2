@@ -99,7 +99,7 @@ function getData(dept, callback) {
 }
 
 
-getData('ICS', function(data) {
-  console.log(JSON.stringify(data, undefined, 2));
-});
+//getData('ICS', function(data) {
+//  console.log(JSON.stringify(data, undefined, 2));
+//});
 

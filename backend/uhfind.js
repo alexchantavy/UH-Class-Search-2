@@ -2,6 +2,7 @@
 // phantom.js.
 
 var page = require('webpage').create();
+var fs = require('fs');
 
 // Listener to display console msgs from within page.evaluate()
 page.onConsoleMessage = function(msg) {
@@ -29,76 +30,99 @@ var departments = ["ACC", "ACM", "AMST", "ANAT",
 
 
 var getDepartmentCourses = function() {
-  _fetchCourseData.call(this, 'ICS', function(data) {
+  //departments.forEach(function(dept) {
+    fetchRemoteCourseData('ICS', function(data) {
+      console.log(data.length);
+      console.log(JSON.stringify(data, undefined, 2));
+    });
+  //});
+};
+
+var fetchLocalTestData = function(filename) {
+  var f = fs.open(filename, 'r');
+  page.content = f.read();
+  scrapePage(function(data) {
+    console.log(data.length);
     console.log(JSON.stringify(data, undefined, 2));
   });
+  phantom.exit();
+};
+
+var fetchRemoteCourseData = function(dept, callback) {
+  var url = 'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=' + dept;
+  _fetchCourseData(url, callback);
 };
 
 
-var _fetchCourseData = function(dept, callback) {
-  var url = 'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=' + dept;
-
+var _fetchCourseData = function(path, callback) {
   // Open UH class listing 
-  page.open(url, function(status) {
+  page.open(path, function(status) {
     if (status === 'success') {
-
-      var result = page.evaluate(function() {
-
-        var rows = document.querySelectorAll('table.listOfClasses tr')
-        var catalog = [];
-
-        // Iterate through the <tr>s starting at index 2 to skip the header rows.
-        for (var i = 2; i < rows.length; i++) {
-
-          var course = {};
-
-          // Here is a weird edge case: sometimes UH class listings like to 
-          // put in a special note for a class that spans 2 <td>s.
-          if (rows[i].cells.length == 2) { 
-            course['extraNotes'] = rows[i].cells[1].textContent;
-            // Done. Advance the row counter.
-            // Assert: this is not the last <tr> of the array.
-            i++; 
-          }
-          course['genEdFocus'] = rows[i].cells[0].textContent;
-          course['crn']        = rows[i].cells[1].textContent;
-          course['course']     = rows[i].cells[2].textContent;
-          course['sectionNum'] = rows[i].cells[3].textContent;
-          course['title']      = rows[i].cells[4].textContent;
-          course['credits']    = rows[i].cells[5].textContent;
-          course['instructor'] = rows[i].cells[6].textContent;
-          course['seatsAvail'] = rows[i].cells[7].textContent;
-
-          course['mtgTime']    = [];        
-          course['mtgTime'].push({
-                                  'days'  : rows[i].cells[8].textContent, 
-                                  'time'  : rows[i].cells[9].textContent,
-                                  'loc'   : rows[i].cells[10].textContent,
-                                  'dates' : rows[i].cells[11].textContent
-                                });        
-          
-          // If there are additional meeting times, add them.
-          // We can tell this by checking if <tr.class> changes.
-          while (rows[i+1] && rows[i].className === rows[i+1].className) {
-            i++;
-            course['mtgTime'].push({
-                                    // '7' because for some reason theres 1 less <td>
-                                    // in new columns
-                                    'days'  : rows[i].cells[7].textContent,
-                                    'time'  : rows[i].cells[8].textContent,
-                                    'loc'   : rows[i].cells[9].textContent,
-                                    'dates' : rows[i].cells[10].textContent
-                                  });
-          }
-          catalog.push(course);
-        } // </For>
-        return catalog;
-      }); // </var result = page.evaluate()>
-      callback(result);
+      scrapePage(callback);
+    }
+    else {
+      console.log('failed to open ' + path);
     }
     phantom.exit();
   });
 };
 
+var scrapePage = function(callback) {
+  var result = page.evaluate(function() {
+    var rows = document.querySelectorAll('table.listOfClasses tr');
+    var catalog = [];
+
+    // Iterate through the <tr>s starting at index 2 to skip the header rows.
+    for (var i = 2; i < rows.length; i++) {
+
+      var course = {};
+
+      // Here is a weird edge case: sometimes UH class listings like to 
+      // put in a special note for a class that spans 2 <td>s.
+      if (rows[i].cells.length == 2) { 
+        course['extraNotes'] = rows[i].cells[1].textContent;
+        // Done. Advance the row counter.
+        // Assert: this is not the last <tr> of the array.
+        i++; 
+      }
+      course['genEdFocus'] = (rows[i].cells[0].textContent === " ") ? "" : rows[i].cells[0].textContent;
+      course['crn']        = rows[i].cells[1].textContent;
+      course['course']     = rows[i].cells[2].textContent;
+      course['sectionNum'] = rows[i].cells[3].textContent;
+      course['title']      = rows[i].cells[4].textContent;
+      course['credits']    = rows[i].cells[5].textContent;
+      course['instructor'] = rows[i].cells[6].textContent;
+      course['seatsAvail'] = rows[i].cells[7].textContent;
+
+      course['mtgTime']    = [];        
+      course['mtgTime'].push({
+                              'days'  : rows[i].cells[8].textContent, 
+                              'time'  : rows[i].cells[9].textContent,
+                              'loc'   : rows[i].cells[10].textContent,
+                              'dates' : rows[i].cells[11].textContent
+                            });        
+      
+      // If there are additional meeting times, add them.
+      // We can tell this by checking if <tr.class> changes.
+      while (rows[i+1] && rows[i].className === rows[i+1].className) {
+        i++;
+        course['mtgTime'].push({
+                                // '7' because for some reason theres 1 less <td>
+                                // in new columns
+                                'days'  : rows[i].cells[7].textContent,
+                                'time'  : rows[i].cells[8].textContent,
+                                'loc'   : rows[i].cells[9].textContent,
+                                'dates' : rows[i].cells[10].textContent
+                              });
+      }
+      catalog.push(course);
+    } // </For>
+    return catalog;
+  }); // </var result = page.evaluate()>
+  callback(result);
+};
+
+
 
 getDepartmentCourses();
+//fetchLocalTestData('../test/testdata/ics.html');

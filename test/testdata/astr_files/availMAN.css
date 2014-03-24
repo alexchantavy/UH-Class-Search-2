@@ -1,0 +1,10 @@
+@import url("avail.css");
+
+div.header {
+    background-color: #00885A;
+}
+
+h1, th {
+    color: #00885A;
+}
+

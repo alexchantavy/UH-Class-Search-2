@@ -1,13 +1,15 @@
 describe("UH find methods", function() {
   
-	describe("UHFind object constructor", function() {
-	    it("should exist in window", function() {
-	        expect(window.hasOwnProperty('UHFind')).toBeTruthy();
-	    });
+	describe("UH find scrapePage()", function() {
+	    var page = require('webpage').create();
 
-	    it("should be a function", function() {
-	        expect(typeof window.UHFind).toEqual('function');
-	    });
+	    it("returns the expected number of courses", function() {
+		    var f = fs.open('../test/testdata/ics.html', 'r');
+			page.content = f.read();
+			scrapePage(function(data) {
+			  expect(data.length).toEqual(61);
+			});
+		});
+        
 	});
-
 });

@@ -1,6 +1,8 @@
-/*
-  This file is part of the PhantomJS project from Ofi Labs.
+// Using the test runner from the phantomJs source code
+// because it works pretty damn well.  Run this with 
+// $>  phantomjs run-tests.js
 
+/*
   Copyright (C) 2011 Ariya Hidayat <ariya.hidayat@gmail.com>
   Copyright (C) 2011 Ivan De Marino <ivan.de.marino@gmail.com>
 
@@ -31,38 +33,16 @@
 // Load Jasmine and the HTML reporter
 phantom.injectJs("./lib/jasmine.js");
 phantom.injectJs("./lib/jasmine-console.js");
-//phantom.injectJs("../node_modules/chai/chai.js");
+phantom.injectJs("../node_modules/chai/chai.js");
+var should = chai.should();
+var expect = chai.expect();
 
-//var should = chai.should();
-
-// Helper funcs
-function expectHasFunction(o, name) {
-    it("should have '" + name + "' function", function() {
-        expect(typeof o[name]).toEqual('function');
-    });
-}
-
-function expectHasProperty(o, name) {
-    it("should have '" + name + "' property", function() {
-        expect(o.hasOwnProperty(name)).toBeTruthy();
-    });
-}
-
-function expectHasPropertyString(o, name) {
-    expectHasProperty(o, name);
-
-    it("should have '" + name + "' as a string", function() {
-        expect(typeof o[name]).toEqual('string');
-    });
-}
 
 // Setting the "working directory" to the "/test" directory
-var fs = require('fs');
+var fs     = require('fs');
 fs.changeWorkingDirectory(phantom.libraryPath);
 
 // Load specs
-//seems like inject js just straight runs this shit
-//phantom.injectJs("./webpage-spec.js");
 phantom.injectJs("./uhfind-spec.js");
 require("./module_spec.js");
 
@@ -81,3 +61,24 @@ jasmineEnv.addReporter(new jasmine.ConsoleReporter(function(msg){
 // Launch tests
 jasmineEnv.updateInterval = 1000;
 jasmineEnv.execute();
+
+
+
+// Helper funcs
+function expectHasFunction(o, name) {
+    it("should have '" + name + "' function", function() {
+        expect(typeof o[name]).toEqual('function');
+    });
+}
+function expectHasProperty(o, name) {
+    it("should have '" + name + "' property", function() {
+        expect(o.hasOwnProperty(name)).toBeTruthy();
+    });
+}
+function expectHasPropertyString(o, name) {
+    expectHasProperty(o, name);
+
+    it("should have '" + name + "' as a string", function() {
+        expect(typeof o[name]).toEqual('string');
+    });
+}

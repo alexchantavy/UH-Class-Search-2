@@ -1,15 +1,17 @@
 // Visits UH ICS class availability and parses all listings to JSON using 
 // phantom.js.
 
-var page = require('webpage').create();
-var fs = require('fs');
+  
+module.exports = 
 
-// Listener to display console msgs from within page.evaluate()
-page.onConsoleMessage = function(msg) {
-  console.log(msg);
-};
+(function() {
+  var page = require('webpage').create();
+  // display console msgs from within page.evaluate()
+  page.onConsoleMessage = function(msg) {
+    console.log(msg);
+  };
 
-var departments = ["ACC", "ACM", "AMST", "ANAT",
+  this.departments = ["ACC", "ACM", "AMST", "ANAT",
         "ANSC", "ANTH", "APDM", "ARAB", "ARCH", "ART", "AS", "ASAN", "ASTR",
         "BE", "BIOC", "BIOL", "BIOM", "BLAW", "BOT", "BUS", "CAAM", "CAM",
         "CAS", "CEE", "CHAM", "CHEM", "CHN", "CIS", "CMB", "COM", "CSD",
@@ -28,47 +30,30 @@ var departments = ["ACC", "ACM", "AMST", "ANAT",
         "SURG", "SW", "TAHT", "THAI", "THEA", "TI", "TIM", "TONG", "TPSS",
         "TRMD", "VIET", "WS", "ZOOL"];
 
-
-var getDepartmentCourses = function() {
-  //departments.forEach(function(dept) {
-    fetchRemoteCourseData('ICS', function(data) {
-      console.log(data.length);
-      console.log(JSON.stringify(data, undefined, 2));
+  // main reason why you want to "require()" this module.
+  // @param dept      the department
+  // @param callback  callback function to return the data to
+  this.fetchDeptCourses = function(dept, callback) {
+    var url = 'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s='
+              + dept;
+    page.open(path, function(status) {
+      if (status === 'success') {
+        // use phantomjs to run my DOM-grabbing code
+        var result = page.evaluate( grabCourseObjectsFromDom );
+        callback(result);
+      }
+      else {
+        console.log('failed to open ' + path);
+      }
     });
-  //});
-};
+  };
 
-var fetchLocalTestData = function(filename) {
-  var f = fs.open(filename, 'r');
-  page.content = f.read();
-  scrapePage(function(data) {
-    console.log(data.length);
-    console.log(JSON.stringify(data, undefined, 2));
-  });
-  phantom.exit();
-};
-
-var fetchRemoteCourseData = function(dept, callback) {
-  var url = 'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201430&s=' + dept;
-  _fetchCourseData(url, callback);
-};
-
-
-var _fetchCourseData = function(path, callback) {
-  // Open UH class listing 
-  page.open(path, function(status) {
-    if (status === 'success') {
-      scrapePage(callback);
-    }
-    else {
-      console.log('failed to open ' + path);
-    }
-    phantom.exit();
-  });
-};
-
-var scrapePage = function(callback) {
-  var result = page.evaluate(function() {
+  // private helper function, performs the DOM manipulation and makes course 
+  // objects.  
+  // if you wanted to, you could copy and paste the contents of this function 
+  // into a browser dev console and run it on the UH site and it will return 
+  // the correct data into var catalog. 
+  function grabCourseObjectsFromDom() {
     var rows = document.querySelectorAll('table.listOfClasses tr');
     var catalog = [];
 
@@ -85,14 +70,15 @@ var scrapePage = function(callback) {
         // Assert: this is not the last <tr> of the array.
         i++; 
       }
-      course['genEdFocus'] = (rows[i].cells[0].textContent === " ") ? "" : rows[i].cells[0].textContent;
-      course['crn']        = rows[i].cells[1].textContent;
-      course['course']     = rows[i].cells[2].textContent;
-      course['sectionNum'] = rows[i].cells[3].textContent;
-      course['title']      = rows[i].cells[4].textContent;
-      course['credits']    = rows[i].cells[5].textContent;
-      course['instructor'] = rows[i].cells[6].textContent;
-      course['seatsAvail'] = rows[i].cells[7].textContent;
+      course['genEdFocus'] =  ( rows[i].cells[0].textContent === " ") ? "" 
+                              : rows[i].cells[0].textContent;
+      course['crn']         =   rows[i].cells[1].textContent;
+      course['course']      =   rows[i].cells[2].textContent;
+      course['sectionNum']  =   rows[i].cells[3].textContent;
+      course['title']       =   rows[i].cells[4].textContent;
+      course['credits']     =   rows[i].cells[5].textContent;
+      course['instructor']  =   rows[i].cells[6].textContent;
+      course['seatsAvail']  =   rows[i].cells[7].textContent;
 
       course['mtgTime']    = [];        
       course['mtgTime'].push({
@@ -101,7 +87,7 @@ var scrapePage = function(callback) {
                               'loc'   : rows[i].cells[10].textContent,
                               'dates' : rows[i].cells[11].textContent
                             });        
-      
+        
       // If there are additional meeting times, add them.
       // We can tell this by checking if <tr.class> changes.
       while (rows[i+1] && rows[i].className === rows[i+1].className) {
@@ -117,12 +103,27 @@ var scrapePage = function(callback) {
       }
       catalog.push(course);
     } // </For>
+
     return catalog;
-  }); // </var result = page.evaluate()>
-  callback(result);
-};
+  }
 
+});
 
-
-//getDepartmentCourses();
-fetchLocalTestData('../test/testdata/ics.html');
+// maybe this will be useful in the future, idk-my-bff-jill
+// var getDepartmentCourses = function() {
+//   //departments.forEach(function(dept) {
+//     fetchDeptCourseData('ICS', function(data) {
+//       console.log(data.length);
+//       console.log(JSON.stringify(data, undefined, 2));
+//     });
+//   //});
+// };
+// var fetchLocalTestData = function(filename) {
+//   var f = fs.open(filename, 'r');
+//   page.content = f.read();
+//   scrapePage(function(data) {
+//     console.log(data.length);
+//     console.log(JSON.stringify(data, undefined, 2));
+//   });
+//   phantom.exit();
+// };

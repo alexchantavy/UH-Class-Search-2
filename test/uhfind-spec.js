@@ -1,23 +1,20 @@
-// run $> phantomjs run-tests.js  !!
+describe("UH find module", function() {
+	var uhfind = require('../backend/uhfind');
+  	it ("Should have a list of departments", function() {
+  		expectHasProperty(uhfind, departments);
+  		expectHasProperty(uhfind, fetchDeptCourses);
+  	}
 
-describe("UH find methods", function() {
-  
-	describe("UH find scrapePage()", function() {
-	    var page = require('webpage').create();
+	// describe("PhantomJs grabbing a webpage", function() {
+	//     var page = require('webpage').create();
 
-	    it("returns the expected number of courses", function() {
-	    	// workaround for local path in phantomjs from https://github.com/ariya/phantomjs/issues/10330
-		    var f = fs.open('./testdata/ics.html', 'r');
-			page.content = f.read();
-			expect(page.content).to.be.ok;
-			//scrapePage(function(data) {
-			//  expect(data.length).toEqual(61);
-			//});
-		});
+	//     it("Should return a data object that isn't null", function() {
+	// 	    page.content = f.read();
+	// 		page.content.should.not.equal(null);
+	// 		//scrapePage(function(data) {
+	// 		//  expect(data.length).toEqual(61);
+	// 		//});
+	// 	});
         
-	});
-
-//	describe("Count Rows", function() {
-//		page
-//	};
+	// });
 });

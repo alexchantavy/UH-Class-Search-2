@@ -31,9 +31,9 @@
 // Load Jasmine and the HTML reporter
 phantom.injectJs("./lib/jasmine.js");
 phantom.injectJs("./lib/jasmine-console.js");
-phantom.injectJs("../node_modules/chai/chai.js");
+//phantom.injectJs("../node_modules/chai/chai.js");
 
-var should = chai.should();
+//var should = chai.should();
 
 // Helper funcs
 function expectHasFunction(o, name) {

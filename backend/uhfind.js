@@ -124,5 +124,5 @@ var scrapePage = function(callback) {
 
 
 
-getDepartmentCourses();
-//fetchLocalTestData('../test/testdata/ics.html');
+//getDepartmentCourses();
+fetchLocalTestData('../test/testdata/ics.html');

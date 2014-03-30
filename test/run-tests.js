@@ -33,9 +33,30 @@
 // Load Jasmine and the HTML reporter
 phantom.injectJs("./lib/jasmine.js");
 phantom.injectJs("./lib/jasmine-console.js");
-phantom.injectJs("../node_modules/chai/chai.js");
-var should = chai.should();
-var expect = chai.expect();
+phantom.injectJs("./lib/chai.js");
+
+var expect = require('chai').expect;
+
+// Helper funcs
+function expectHasFunction(o, name) {
+    it("should have '" + name + "' function", function() {
+        expect(o[name]).to.be.a('function');
+    });
+}
+
+function expectHasProperty(o, name) {
+    it("should have '" + name + "' property", function() {
+        expect(o.hasOwnProperty(name)).to.be.true;
+    });
+}
+
+function expectHasPropertyString(o, name) {
+    expectHasProperty(o, name);
+
+    it("should have '" + name + "' as a string", function() {
+        expect(typeof o[name]).to.be.a('string');
+    });
+}
 
 
 // Setting the "working directory" to the "/test" directory
@@ -43,8 +64,7 @@ var fs     = require('fs');
 fs.changeWorkingDirectory(phantom.libraryPath);
 
 // Load specs
-phantom.injectJs("./uhfind-spec.js");
-require("./module_spec.js");
+phantom.injectJs("./specs/uhfind_spec.js");
 
 // Launch tests
 var jasmineEnv = jasmine.getEnv();
@@ -62,23 +82,3 @@ jasmineEnv.addReporter(new jasmine.ConsoleReporter(function(msg){
 jasmineEnv.updateInterval = 1000;
 jasmineEnv.execute();
 
-
-
-// Helper funcs
-function expectHasFunction(o, name) {
-    it("should have '" + name + "' function", function() {
-        expect(typeof o[name]).toEqual('function');
-    });
-}
-function expectHasProperty(o, name) {
-    it("should have '" + name + "' property", function() {
-        expect(o.hasOwnProperty(name)).toBeTruthy();
-    });
-}
-function expectHasPropertyString(o, name) {
-    expectHasProperty(o, name);
-
-    it("should have '" + name + "' as a string", function() {
-        expect(typeof o[name]).toEqual('string');
-    });
-}

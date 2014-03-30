@@ -1,20 +1,23 @@
 
 {
-  "name": "openshift-test",
-  "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "name": "Power Overwhelming",
+  "version": "0.0.1",
+  "description": "Graduate faster with this UH class finder",
 
   "keywords": [
     "OpenShift",
     "Node.js",
     "application",
-    "openshift"
+    "openshift", 
+    "phantomjs",
+    "screen scrape",
+    "chai"
   ],
 
   "author": {
     "name": "Alex Chantavy",
     "email": "chantavy@gmail.com",
-    "url": "herpderp"
+    "url": "http://github.com/alexchantavy"
   },
 
   "homepage": "http://www.openshift.com/",
@@ -32,11 +35,10 @@
     "express": "~3.4.4",
     "stylus":  "0.29.x",
     "jade":    "0.27.x",
-    "jquery":  "1.7.x"
   },
   "devDependencies": {
     "chai": "*",
-    "mocha": "*"
+    "jasmine": "*"
   },
   "bundleDependencies": [],
 

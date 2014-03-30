@@ -1,9 +1,26 @@
 uh-class-search-2
 =================
 
-Graduate faster with this UH class searcher.
+Graduate faster with this UH class searcher. 
+
+Uses phantomjs for screen scraping.
 
 
-Updates
-=======
-3/22/14: Currently uhfind.js is able to generate objects from certain departments on the UHM course catalog.  Need to fix some weird DOM oddities.
+# Usage
+
+```javascript
+var UHFind = require('./uhfind.js');
+var uhfind = new UHFind();
+
+//retrieve and print all ICS courses from UH catalog
+uhfind.fetchDeptCourses('ICS', function(res){
+	console.log(JSON.stringify(res, undefined, 2));
+});
+```
+
+
+# How to run tests
+
+```shell
+$> phantomjs test/run-tests.js
+```

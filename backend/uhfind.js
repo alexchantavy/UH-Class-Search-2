@@ -29,7 +29,6 @@ function UHFinder(baseUrl) {
     page.open(this.baseUrl+dept, function(status) {
       var result = page.evaluate(scrapeDom);
       callback(result);
-      phantom.exit();
     })
   };
 
@@ -43,14 +42,16 @@ function UHFinder(baseUrl) {
 
       var course = {};
 
-      // Here is a weird edge case: sometimes UH class listings like to 
+      // Edge case 1: skip the section-comments that take up entire rows.  
+      if (rows[i].className.indexOf('section-comment-course') != -1) { i++; }
+
+      // Edge case 2: sometimes UH class listings like to 
       // put in a special note for a class that spans 2 <td>s.
       if (rows[i].cells.length == 2) { 
         course['extraNotes'] = rows[i].cells[1].textContent;
-        // Done. Advance the row counter.
-        // Assert: this is not the last <tr> of the array.
         i++; 
       }
+
       course['genEdFocus'] =  ( rows[i].cells[0].textContent === " ") ? "" 
                               : rows[i].cells[0].textContent;
       course['crn']         =   rows[i].cells[1].textContent;

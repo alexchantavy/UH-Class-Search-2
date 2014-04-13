@@ -38,7 +38,7 @@
     "mongodb": "*"
   },
   "devDependencies": {
-    "chai": "*",
+    "chai": "*"
   },
   "bundleDependencies": [],
 

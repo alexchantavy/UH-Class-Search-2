@@ -3,8 +3,15 @@
 var express = require('express');
 var fs      = require('fs');
 var stylus  = require('stylus');
-
 var app = express();
+var Api = require('./backend/data-provider.js').API;
+
+// Set up the DB
+var api = new Api(process.env.OPENSHIFT_MONGODB_DB_HOST,
+                  parseInt(process.env.OPENSHIFT_MONGODB_DB_PORT),
+                  process.env.OPENSHIFT_MONGODB_DB_USERNAME,
+                  process.env.OPENSHIFT_MONGODB_DB_PASSWORD);
+
 
 // standard expressjs config, only thing different is that it 
 // references OPENSHIFT_REPO_DIR.

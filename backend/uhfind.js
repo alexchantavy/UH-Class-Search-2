@@ -32,8 +32,15 @@ function UHFinder(baseUrl) {
     })
   };
 
+
+
   // scrape dat DOM.  private helper function.
   var scrapeDom = function() {
+    // return true if $test is a substring in $string
+    var isSubstring = function(string, test) {
+      return string.indexOf(test) > -1; 
+    }
+
     var rows = document.querySelectorAll('table.listOfClasses tr');
     var catalog = [];
 
@@ -43,48 +50,50 @@ function UHFinder(baseUrl) {
       var course = {};
 
       // Edge case 1: skip the section-comments that take up entire rows.  
-      if (rows[i].className.indexOf('section-comment-course') != -1) { i++; }
-
-      // Edge case 2: sometimes UH class listings like to 
-      // put in a special note for a class that spans 2 <td>s.
-      if (rows[i].cells.length == 2) { 
-        course['extraNotes'] = rows[i].cells[1].textContent;
-        i++; 
-      }
-
-      course['genEdFocus'] =  ( rows[i].cells[0].textContent === " ") ? "" 
-                              : rows[i].cells[0].textContent;
-      course['crn']         =   rows[i].cells[1].textContent;
-      course['course']      =   rows[i].cells[2].textContent;
-      course['sectionNum']  =   rows[i].cells[3].textContent;
-      course['title']       =   rows[i].cells[4].textContent;
-      course['credits']     =   rows[i].cells[5].textContent;
-      course['instructor']  =   rows[i].cells[6].textContent;
-      course['seatsAvail']  =   rows[i].cells[7].textContent;
-
-      course['mtgTime']    = [];        
-      course['mtgTime'].push({
-                              'days'  : rows[i].cells[8].textContent, 
-                              'time'  : rows[i].cells[9].textContent,
-                              'loc'   : rows[i].cells[10].textContent,
-                              'dates' : rows[i].cells[11].textContent
-                            });        
+      if ( ! isSubstring(rows[i].className, 'section-comment-course')) { 
         
-      // If there are additional meeting times, add them.
-      // We can tell this by checking if <tr.class> changes.
-      while (rows[i+1] && rows[i].className === rows[i+1].className) {
-        i++;
+        // Edge case 2: sometimes UH class listings like to 
+        // put in a special note for a class that spans 2 <td>s.
+        if (rows[i].cells.length == 2) { 
+          course['extraNotes'] = rows[i].cells[1].textContent;
+          i++; 
+        }
+
+        course['dept']        =   dept;
+        course['genEdFocus']  =  (rows[i].cells[0].textContent === " ") ? "" : 
+                                  rows[i].cells[0].textContent;
+        course['crn']         =   rows[i].cells[1].textContent;
+        course['course']      =   rows[i].cells[2].textContent;
+        course['sectionNum']  =   rows[i].cells[3].textContent;
+        course['title']       =   rows[i].cells[4].textContent;
+        course['credits']     =   rows[i].cells[5].textContent;
+        course['instructor']  =   rows[i].cells[6].textContent;
+        course['seatsAvail']  =   rows[i].cells[7].textContent;
+
+        course['mtgTime']    = [];        
         course['mtgTime'].push({
-                                // '7' because for some reason theres 1 less <td>
-                                // in new columns
-                                'days'  : rows[i].cells[7].textContent,
-                                'time'  : rows[i].cells[8].textContent,
-                                'loc'   : rows[i].cells[9].textContent,
-                                'dates' : rows[i].cells[10].textContent
-                              });
+                                'days'  : rows[i].cells[8].textContent, 
+                                'time'  : rows[i].cells[9].textContent,
+                                'loc'   : rows[i].cells[10].textContent,
+                                'dates' : rows[i].cells[11].textContent
+                              });        
+          
+        // If there are additional meeting times, add them.
+        // We can tell this by checking if <tr.class> changes.
+        while (rows[i+1] && rows[i].className === rows[i+1].className) {
+          i++;
+          course['mtgTime'].push({
+                                  // '7' because for some reason theres 1 less <td>
+                                  // in new columns
+                                  'days'  : rows[i].cells[7].textContent,
+                                  'time'  : rows[i].cells[8].textContent,
+                                  'loc'   : rows[i].cells[9].textContent,
+                                  'dates' : rows[i].cells[10].textContent
+                                });
+        }
+        catalog.push(course);
       }
-      console.log(JSON.stringify(course));
-      catalog.push(course);
+
     } // </For>
     return catalog;
   }

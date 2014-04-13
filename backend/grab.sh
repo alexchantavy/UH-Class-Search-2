@@ -3,5 +3,5 @@ declare -a arr=("ACC" "ACM" "AMST" "ANAT" "ANSC" "ANTH" "ARAB" "ARCH" "ART" "AS"
 for DEPT in "${arr[@]}"
 do
 	echo $DEPT
-	/usr/local/bin/phantomjs run-uhfind-cli.js $DEPT 
+	phantomjs run-uhfind-cli.js $DEPT 
 done

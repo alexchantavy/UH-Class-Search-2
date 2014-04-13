@@ -41,6 +41,15 @@ app.configure(function() {
 app.get('/', function(req, res) {
   res.render('index', {layout: 'layout', title: 'Herp'});
 });
+app.get('/ics', function(req, res) {
+  api.findByDepartment('ICS', function(error, docs) {
+    if (error) {console.log(error); } 
+    else {
+      res.send(docs);
+    }
+  });
+});
+
 
 // env vars
 var ipaddr = process.env.OPENSHIFT_NODEJS_IP;

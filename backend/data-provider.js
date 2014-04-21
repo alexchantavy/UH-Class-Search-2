@@ -1,3 +1,6 @@
+// probably going to delete this file!!!!!!
+
+
 // Set up our DB API globals.
 var Db         = require('mongodb').Db;
 var Connection = require('mongodb').Connection;
@@ -7,7 +10,7 @@ var ObjectID   = require('mongodb').ObjectID;
 
 // Main DB provider object
 API = function(host, port, user, pass) {
-  this.db = new Db(process.env.OPENSHIFT_APP_NAME, new Server(host, port, { auto_reconnect: true }, {}));
+  this.db = new Db(process.env.OPENSHIFT_APP_NAME || 'test', new Server(host, port, { auto_reconnect: true }, {}));
   this.db.open(function(error, db) {
     db.authenticate(user, pass, function(error, result) {});
   });

@@ -1,8 +1,8 @@
 // uhfindstubs.js
 
 function UHFinder(baseUrl) {
-  this.baseUrl = typeof baseUrl !== 'undefined' ?  url :
-        'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510&s=';
+  this.baseUrl = typeof baseUrl !== 'undefined' ?  baseUrl :
+            'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510&s=';
 
   this.departments = ["ACC", "ACM", "AMST", "ANAT",
         "ANSC", "ANTH", "APDM", "ARAB", "ARCH", "ART", "AS", "ASAN", "ASTR",
@@ -23,23 +23,58 @@ function UHFinder(baseUrl) {
         "SURG", "SW", "TAHT", "THAI", "THEA", "TI", "TIM", "TONG", "TPSS",
         "TRMD", "VIET", "WS", "ZOOL"];
 
+  var page = require('webpage').create();
+
   // get all classes in given department, return data to a callback.
   this.fetchDeptCourses = function(dept, callback) {
-    var page = require('webpage').create();
-    page.open(this.baseUrl+dept, function(status) {
-      var result = page.evaluate(scrapeDom);
-      callback(result);
-    })
+    
+    var url = this.baseUrl + dept;
+
+    page.onResourceError = function(resourceError) {
+      page.reason = resourceError.errorString;
+      page.reason_url = resourceError.url;
+    };
+
+    page.open(url, function(status) {
+      if (status === 'success') {
+        console.log('opened ' + url);
+        var result = page.evaluate(scrapeDom);
+    
+        callback(null, result);
+
+      } else {
+        callback(page.reason_url + " " + page.reason); 
+      }
+
+    });
   };
-
-
 
   // scrape dat DOM.  private helper function.
   var scrapeDom = function() {
-    // return true if $test is a substring in $string
+
+     // return true if $test is a substring in $string
     var isSubstring = function(string, test) {
       return string.indexOf(test) > -1; 
-    }
+    };
+
+    // helper function to get start and end times from UH data
+    var getTime = function(type, timeString) {
+      console.log(timeString);
+      if (/\d{4}-\d{4}[a|p]/.test(timeString)) {
+        
+        if (type === 'start') {
+          return timeString.substring(0,4); 
+        } 
+        if (type === 'end') {
+          return timeString.substring(5);
+        } 
+
+      } else if (timeString === 'TBA') {
+        return 'TBA';
+      } else {
+        return ' ';
+      }
+    };
 
     var rows = document.querySelectorAll('table.listOfClasses tr');
     var catalog = [];
@@ -55,48 +90,49 @@ function UHFinder(baseUrl) {
         // Edge case 2: sometimes UH class listings like to 
         // put in a special note for a class that spans 2 <td>s.
         if (rows[i].cells.length == 2) { 
-          course['extraNotes'] = rows[i].cells[1].textContent;
+          course.extraNotes = rows[i].cells[1].textContent;
           i++; 
         }
 
-        course['dept']        =   dept;
-        course['genEdFocus']  =  (rows[i].cells[0].textContent === " ") ? "" : 
-                                  rows[i].cells[0].textContent;
-        course['crn']         =   rows[i].cells[1].textContent;
-        course['course']      =   rows[i].cells[2].textContent;
-        course['sectionNum']  =   rows[i].cells[3].textContent;
-        course['title']       =   rows[i].cells[4].textContent;
-        course['credits']     =   rows[i].cells[5].textContent;
-        course['instructor']  =   rows[i].cells[6].textContent;
-        course['seatsAvail']  =   rows[i].cells[7].textContent;
+        course.genEdFocus    =  (rows[i].cells[0].textContent === " ") ? "" : rows[i].cells[0].textContent;
+        course.crn           =   rows[i].cells[1].textContent;
+        course.course        =   rows[i].cells[2].textContent;
+        course.sectionNum    =   rows[i].cells[3].textContent;
+        course.title         =   rows[i].cells[4].textContent;
+        course.credits       =   rows[i].cells[5].textContent;
+        course.instructor    =   rows[i].cells[6].textContent;
+        course.seatsAvail    =   rows[i].cells[7].textContent;
 
-        course['mtgTime']    = [];        
-        course['mtgTime'].push({
-                                'days'  : rows[i].cells[8].textContent, 
-                                'time'  : rows[i].cells[9].textContent,
-                                'loc'   : rows[i].cells[10].textContent,
-                                'dates' : rows[i].cells[11].textContent
-                              });        
+        course.mtgTime       = [];       
+
+        course.mtgTime.push({
+                              'days'  : rows[i].cells[8].textContent, 
+                              'start' : getTime('start', rows[i].cells[9].textContent),
+                              'end'   : getTime( 'end' , rows[i].cells[9].textContent),
+                              'loc'   : rows[i].cells[10].textContent,
+                              'dates' : rows[i].cells[11].textContent
+                            });        
           
         // If there are additional meeting times, add them.
         // We can tell this by checking if <tr.class> changes.
         while (rows[i+1] && rows[i].className === rows[i+1].className) {
           i++;
-          course['mtgTime'].push({
-                                  // '7' because for some reason theres 1 less <td>
-                                  // in new columns
-                                  'days'  : rows[i].cells[7].textContent,
-                                  'time'  : rows[i].cells[8].textContent,
-                                  'loc'   : rows[i].cells[9].textContent,
-                                  'dates' : rows[i].cells[10].textContent
-                                });
+          course.mtgTime.push({
+                                // '7' because for some reason theres 1 less <td>
+                                // in new columns
+                                'days'  : rows[i].cells[7].textContent,
+                                'start' : getTime('start', rows[i].cells[8].textContent),
+                                'end'   : getTime( 'end' , rows[i].cells[8].textContent),
+                                'loc'   : rows[i].cells[9].textContent,
+                                'dates' : rows[i].cells[10].textContent
+                              });
         }
         catalog.push(course);
       }
 
     } // </For>
     return catalog;
-  }
+  };
 }
 
 

@@ -1,4 +1,3 @@
-// uhfindstubs.js
 
 function UHFinder(baseUrl) {
   this.baseUrl = typeof baseUrl !== 'undefined' ?  baseUrl :

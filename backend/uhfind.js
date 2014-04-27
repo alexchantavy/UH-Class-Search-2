@@ -101,15 +101,17 @@ function UHFinder(baseUrl) {
         course.credits       =   rows[i].cells[5].textContent;
         course.instructor    =   rows[i].cells[6].textContent;
         course.seatsAvail    =   rows[i].cells[7].textContent;
+        course.waitListed    =   rows[i].cells[8].textContent; 
+        course.waitAvail     =   rows[i].cells[9].textContent;
 
         course.mtgTime       = [];       
 
         course.mtgTime.push({
-                              'days'  : rows[i].cells[8].textContent, 
-                              'start' : getTime('start', rows[i].cells[9].textContent),
-                              'end'   : getTime( 'end' , rows[i].cells[9].textContent),
-                              'loc'   : rows[i].cells[10].textContent,
-                              'dates' : rows[i].cells[11].textContent
+                              'days'  : rows[i].cells[10].textContent, 
+                              'start' : getTime('start', rows[i].cells[11].textContent),
+                              'end'   : getTime( 'end' , rows[i].cells[11].textContent),
+                              'loc'   : rows[i].cells[12].textContent,
+                              'dates' : rows[i].cells[13].textContent
                             });        
           
         // If there are additional meeting times, add them.
@@ -117,13 +119,13 @@ function UHFinder(baseUrl) {
         while (rows[i+1] && rows[i].className === rows[i+1].className) {
           i++;
           course.mtgTime.push({
-                                // '7' because for some reason theres 1 less <td>
+                                // '9' because for some reason theres 1 less <td>
                                 // in new columns
-                                'days'  : rows[i].cells[7].textContent,
-                                'start' : getTime('start', rows[i].cells[8].textContent),
-                                'end'   : getTime( 'end' , rows[i].cells[8].textContent),
-                                'loc'   : rows[i].cells[9].textContent,
-                                'dates' : rows[i].cells[10].textContent
+                                'days'  : rows[i].cells[9].textContent,
+                                'start' : getTime('start', rows[i].cells[10].textContent),
+                                'end'   : getTime( 'end' , rows[i].cells[10].textContent),
+                                'loc'   : rows[i].cells[11].textContent,
+                                'dates' : rows[i].cells[12].textContent
                               });
         }
         catalog.push(course);

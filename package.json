@@ -32,10 +32,12 @@
   },
 
   "dependencies": {
+    "async": "*",
     "express": "~3.4.4",
     "stylus":  "0.29.x",
     "jade":    "0.27.x",
-    "mongodb": "*"
+    "mongodb": "*",
+    "mongoose": "*"
   },
   "devDependencies": {
     "chai": "*"

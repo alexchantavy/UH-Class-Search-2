@@ -1,100 +1,31 @@
-//nowhere near done yet very exploratory!!!!!!!
-
-var mongoose = require('mongoose'),
-    fs       = require('fs'),
-    async    = require('async'),
-    catalog  = require('./data.json');
-
-
-var courseSchema = mongoose.Schema({
-    course:       String,
-    credits:      mongoose.Schema.Types.Mixed,
-    crn:          Number,
-    genEdFocus:   String,
-    instructor:   String,
-    mtgTime: [{
-      dates:      String,
-      days:       String,
-      loc:        String,
-      start:      String,
-      end:        String
-    }],
-    seatsAvail:   Number,
-    waitListed:   Number,
-    waitAvail:    Number,
-    sectionNum:   Number,
-    title:        String
-});
 
 /* 
-  saveCourseArray: saves courses to database.
-  @param catalog: an array of courses returned from UHFind.fetchDeptCourses().
+don't run this script directly, this is called
+from grab.sh.   run ./grab.sh instead             
+
+this script takes the courses saved in data.json 
+and uses functions in db-access.js to save the 
+courses to our mongodb instance.
 */
-var saveCourseArray = function(catalog, callback) {
-  if ( ! Array.isArray(catalog)) {
-    callback('catalog is not an array');
-  } else {
-      
-    mongoose.connect('mongodb://localhost/uhfind');
 
-    var db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
+var dbAccess = require('./db-access.js'),
+    catalog  = require('./data.json');
 
-    db.once('open', function() {
-      
-      var Course         = mongoose.model('Course', courseSchema);
-      var MAX_CONCURRENT = 5;
-      var updateOpts     = { multi: false, update: true };
+if (!catalog) {
+  console.log('run grab.sh!  don\'t run this directly!')
+} else {
+  var start = process.hrtime();
+  dbAccess.saveCourseArray(catalog, function(err) {
+    if (err) {
+      console.log(err)
+    } else {
+      var precision = 3;
+       // divide by a million to get nano to milli
+      var elapsed = process.hrtime(start)[1] / 1000000;
 
-      async.eachLimit(catalog, MAX_CONCURRENT,
-
-        // upsert each of them
-        function(item, callback) {
-
-          var currentCourse = new Course(item);
-          currentCourse.save(function(err) {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log('saved course ' + item.course);
-            }
-            callback();
-          });
-
-          /* //TODO: figure out how to `upsert`.
-          Course.update({ crn: item.crn }, item, updateOpts,
-            function(err, numAffected, raw) {
-              if (err) {
-                callback(err);
-              } else {
-                console.log('saved course ' + item.course);
-                callback();
-              }
-            }
-          );*/
-
-        },
-
-        // done
-        function(err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('saved to db!');
-            mongoose.disconnect();
-          }
-        }
-      );
-
-    });
-  }
-};
-
-saveCourseArray(catalog, function(err) {
-  if (err) 
-    console.log(err)
-  else
-    console.log('success!');
-});
-
+      console.log('finished in ' + process.hrtime(start)[0] +
+              ' s, ' + elapsed.toFixed(precision) + ' ms - ');
+    }
+  });
+}
 

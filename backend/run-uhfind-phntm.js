@@ -1,3 +1,8 @@
+/*
+don't run this script directly, meant to be called from
+grab.sh.  also, this won't run from node; it'll only
+work with phantomjs.
+*/
 
 var async   = require('async'),
 //remember that phantom's `fs` is NOT node's `fs`.

@@ -1,4 +1,6 @@
 
+// module that is meant to be run from phantomjs and not node!
+
 function UHFinder(baseUrl) {
   this.baseUrl = typeof baseUrl !== 'undefined' ?  baseUrl :
             'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510&s=';

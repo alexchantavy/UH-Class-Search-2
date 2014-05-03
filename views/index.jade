@@ -24,8 +24,8 @@ block content
         input(placeholder='Gen Ed/Focus Reqs, e.g. ETH, WI', ng-model='query.genEdFocus')
       td 
         input(placeholder='Instructor', ng-model='query.instructor')
-      td 
-        input(placeholder='MeetingTime', ng-model='query.mtgTime')
+      //-td 
+      //-  input(placeholder='MeetingTime', ng-model='query.mtgTime')
       td 
         input(placeholder='Seats Avail', ng-model='query.seatsAvail')
       td 
@@ -35,17 +35,18 @@ block content
       td 
       td 
         input(ng-model='query.title')
-    tr(ng-repeat='course in courses | filter:query:strict')
-      td {{course.course}}
-      td {{course.credits}}
-      td {{course.crn}}
-      td {{course.genEdFocus}}
-      td {{course.instructor}}
-      td
-        p(ng-repeat='mtgTime in course.mtgTime)
-          br {{mtgTime.days}}, {{mtgTime.loc}}, {{mtgTime.start}}, {{mtgTime.end}}
-      td {{course.seatsAvail}}
-      td {{course.waitListed}}
-      td {{course.waitAvail}}
-      td {{course.sectionNum}}
-      td {{course.title}}
+    tbody(infinite-scroll='loadMore()', infinite-scroll-distance='2')
+      tr(ng-repeat='course in courses | filter:query:strict')
+        td {{course.course}}
+        td {{course.credits}}
+        td {{course.crn}}
+        td {{course.genEdFocus}}
+        td {{course.instructor}}
+        //-td
+        //-  p(ng-repeat='mtgTime in course.mtgTime)
+        //-    br {{mtgTime.days}}, {{mtgTime.loc}}, {{mtgTime.start}}, {{mtgTime.end}}
+        td {{course.seatsAvail}}
+        td {{course.waitListed}}
+        td {{course.waitAvail}}
+        td {{course.sectionNum}}
+        td {{course.title}}

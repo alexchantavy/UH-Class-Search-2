@@ -1,9 +1,10 @@
 !!!5
 html(ng-app='uhfind')
   head
-    title #{title} - UH Class Finder
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/ng-grid.min.css')
+    title UH Class Finder
+    link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
+    link(rel='stylesheet', href='http://angular-ui.github.com/ng-grid/css/ng-grid.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')  
   body
     header
       h1 UH Class Catalog
@@ -12,6 +13,11 @@ html(ng-app='uhfind')
         block content
     footer
       p github.com/alexchantavy
+      <a href="https://twitter.com/share" class="twitter-share-button" data-via="alexchantavy">Tweet</a>
+    script
+      '!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';\
+      if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\'://platform.twitter.com/widgets.js\';\
+      fjs.parentNode.insertBefore(js,fjs);}}(document, \'script\', \'twitter-wjs\');'
   script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
   script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js')
   script(src='js/ng-grid.min.js')

@@ -1,52 +1,5 @@
 extend layout
 block content
-  table(ng-controller='uhfindCtrl',class='table table-striped table-hover table-condensed') 
-    //-thead 
-    //-  td Course
-    //-  td Credits
-    //-  td CRN
-    //-  td Focus/Gen Ed Reqs
-    //-  td Instructor 
-    //-  td Meeting Times
-    //-  td Seats Avail
-    //-  td Wait Listed
-    //-  td Wait Avail
-    //-  td Section Num
-    //-  td Title 
-    thead 
-      td 
-        input(placeholder='Course Designator, e.g. ICS 311', ng-model='query.course')
-      td 
-        input(placeholder='credits', ng-model='query.credits')
-      td 
-        input(placeholder='crn', ng-model='query.crn')
-      td 
-        input(placeholder='Gen Ed/Focus Reqs, e.g. ETH, WI', ng-model='query.genEdFocus')
-      td 
-        input(placeholder='Instructor', ng-model='query.instructor')
-      //-td 
-      //-  input(placeholder='MeetingTime', ng-model='query.mtgTime')
-      td 
-        input(placeholder='Seats Avail', ng-model='query.seatsAvail')
-      td 
-        input(placeholder='Num Wait Listed', ng-model='query.waitListed')
-      td 
-        input(placeholder='Wait Avail', ng-model='query.waitAvail')
-      td 
-      td 
-        input(ng-model='query.title')
-    tbody(infinite-scroll='loadMore()', infinite-scroll-distance='2')
-      tr(ng-repeat='course in courses | filter:query:strict')
-        td {{course.course}}
-        td {{course.credits}}
-        td {{course.crn}}
-        td {{course.genEdFocus}}
-        td {{course.instructor}}
-        //-td
-        //-  p(ng-repeat='mtgTime in course.mtgTime)
-        //-    br {{mtgTime.days}}, {{mtgTime.loc}}, {{mtgTime.start}}, {{mtgTime.end}}
-        td {{course.seatsAvail}}
-        td {{course.waitListed}}
-        td {{course.waitAvail}}
-        td {{course.sectionNum}}
-        td {{course.title}}
+  div(ng-controller='uhfindCtrl', class='container-fluid table')
+    div(ng-grid='ngGridOptions', class='ngGridStyle')
+ 

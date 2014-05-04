@@ -2,62 +2,30 @@ var express  = require('express'),
 	  app      = express(),
     stylus   = require('stylus'),
     nib      = require('nib'),
-    dbAccess = require('./backend/db-access.js');
+    routes   = require('./routes'),
+    api      = require('./routes/api');
 
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.locals.pretty = true;
-app.use(express.logger('dev'));
-app.use(stylus.middleware({ 
-          src: __dirname + '/public', 
-          compile: function(str, path) {
-                     return stylus(str)
-                     .set('filename', path)
-                     .use(nib());
-                   }    
-}));
+
+var stylusOpts = { src: __dirname + '/public', 
+  compile: function(str, path) {
+    return stylus(str).set('filename', path).use(nib());
+  }
+};
+app.use(stylus.middleware(stylusOpts));
+
 app.use(express.static(__dirname + '/public'))
+app.use(express.logger('dev'));
 
-//TODO FIX THIS SO THAT IT DOESNT JUST SELECTIVELY RETURN HUGE DATA
-app.get('/courses.json', function(req, res) {
-  dbAccess.getAllCourses(function(err, docs) {
-    if (err) {
-      res.send('error!');
-    } else {
-      // send docs up to index `cursor`
-      var from = req.query.from;
-      var to = req.query.to
 
-      if (from
-          && !to
-          && from < docs.length 
-          && from >= 0) {
 
-        res.json(docs.slice(from));
+app.get('/', routes.index);
+app.get('/partials/:name', routes.partials);
 
-      } else if (from 
-               && to 
-               && from < docs.length 
-               && to < docs.length
-               && from >= 0 
-               && to > 0) {
-
-        res.json(docs.slice(from, to))
-
-      } else {
-        res.json(docs);
-      }
-
-    }
-  });  
-});
-
-app.get('/', function(req, res) {
-  res.render('index', 
-    { title : 'Home' }
-  );
-});
+app.get('/api/courses.json', api.courses);
 
 
 app.listen(3000, function(req, res) {

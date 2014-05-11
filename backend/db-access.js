@@ -36,7 +36,7 @@ function getAllCourses(callback) {
   db.on('error', console.error.bind(console, 'connection error:'));
 
   db.once('open', function() {
-    Course.find({}).select('-_id').exec(function(err, docs) {
+    Course.find({}).select().exec(function(err, docs) {
       if (err) {
         callback(err);
       } else {

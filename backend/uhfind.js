@@ -95,13 +95,18 @@ function UHFinder(baseUrl) {
           i++; 
         }
 
-        course.genEdFocus    =  (rows[i].cells[0].textContent === " ") ? "" : rows[i].cells[0].textContent;
+        course.genEdFocus    =  (rows[i].cells[0].textContent == ' ') ? 
+                                         '' : 
+                                         rows[i].cells[0].textContent;
         course.crn           =   rows[i].cells[1].textContent;
         course.course        =   rows[i].cells[2].textContent;
         course.sectionNum    =   rows[i].cells[3].textContent;
         course.title         =   rows[i].cells[4].textContent;
         course.credits       =   rows[i].cells[5].textContent;
-        course.instructor    =   rows[i].cells[6].textContent;
+        course.instructor    =   (rows[i].cells[6].textContent == 'TBA') ? 
+                                         'TBA' : 
+                                                                   // get only last name
+                                         rows[i].cells[6].textContent.substring(2);
         course.seatsAvail    =   rows[i].cells[7].textContent;
         course.waitListed    =   rows[i].cells[8].textContent; 
         course.waitAvail     =   rows[i].cells[9].textContent;

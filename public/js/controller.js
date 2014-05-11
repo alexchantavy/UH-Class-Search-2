@@ -1,71 +1,49 @@
 // controller.js
-var uhfind = angular.module('uhfind', ['ngGrid']);
+var uhfind = angular.module('uhfind', ['ngTable']);
 
+uhfind.controller('uhfindCtrl', function($scope, $http, $filter, ngTableParams) {
 
-uhfind.controller('uhfindCtrl', function($scope, $http) {
-  $scope.courses = [];
-  $http.get('api/courses.json').success(function(data) { 
-    $scope.courses = data;
-  });
+  $scope.lastUpdated;
+  var data = [];
 
-  var filterBarPlugin = {
-    init: function(scope, grid) {
-      filterBarPlugin.scope = scope;
-      filterBarPlugin.grid = grid;
+  $scope.orderInstructorsBy = function(course) {
+    return course.instructor.substring(2);
+  }
 
-      $scope.$watch(function() { 
-      //watch expression
-        var searchQuery = '';    
-        angular.forEach(filterBarPlugin.scope.columns, function(col) {
-          if (col.visible && col.filterText) {
-            var filterText = (col.filterText.indexOf('*') == 0 ? col.filterText.replace('*', '') : "^" + col.filterText) + ";";
-            searchQuery += col.displayName + ": " + filterText;
-          }
+  $scope.tableParams = new ngTableParams({
+      page: 1,
+      count: 10,
+      filter: {},
+      sorting: { 
+        course: 'asc'
+      }
+    }, {
+      total: data.length,
+      getData: function($defer, params) {
+        $http.get('api/courses.json')
+        .success(function(data) { 
+
+          var m = dateFromObjectId(data[0]._id);
+          $scope.lastUpdated = m.getUTCFullYear() +"/"+ (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " " + m.getUTCHours() + ":" + m.getUTCMinutes() + ":" + m.getUTCSeconds();
+
+          // use built-in angular filter
+          var filteredData = params.filter() ?
+              $filter('filter')(data, params.filter()) :
+              data;
+
+          var orderedData = params.sorting() ?
+              $filter('orderBy')(filteredData, params.orderBy()) :
+              data;
+
+          params.total(data.length);
+          $defer.resolve(orderedData.slice((params.page() -1) * params.count()
+                        , params.page() * params.count()));
+
         });
-        return searchQuery;
-      }, function(searchQuery) { 
-      //listener
-        filterBarPlugin.scope.$parent.filterText = searchQuery;
-        filterBarPlugin.grid.searchProvider.evalFilter();
-      });
-    },
-    scope: undefined,
-    grid: undefined
-  };
-
-  angular.forEach($scope.courses, function(row) {
-    row.concatTime = function() {
-      return this.mtgTime[0].loc + ': ' + this.mtgTime[0].days + ' -- ' + this.mtgTime[0].start + '-' + this.mtgTime[0].end;
-    };
-  });
-
-
-  var colDefs = [
-    {field: 'course', displayName: 'Course', headerCellTemplate: 'partials/filterHead'},
-    {field: 'title', displayName: 'Title', headerCellTemplate: 'partials/filterHead', width: '20%'},
-    {field: 'credits', displayName: 'Credits', headerCellTemplate: 'partials/filterHead'},
-    {field: 'genEdFocus', displayName: 'Reqs Met', headerCellTemplate: 'partials/filterHead'},
-    {field: 'mtgTime[0].loc', displayName: 'Location1', headerCellTemplate: 'partials/filterHead'},
-    {field: 'mtgTime[0].days', displayName: 'Days', headerCellTemplate: 'partials/filterHead'},
-    {field: 'mtgTime[0].start', displayName: 'Start1', headerCellTemplate: 'partials/filterHead'},
-    {field: 'mtgTime[0].end', displayName: 'End1', headerCellTemplate: 'partials/filterHead'},
-    {field: 'instructor', displayName: 'Instructor', headerCellTemplate: 'partials/filterHead'},
-    {field: 'seatsAvail', displayName: 'Seats Avail', headerCellTemplate: 'partials/filterHead'},
-   // {field: 'waitAvail', displayName: 'Wait Avail', headerCellTemplate: 'partials/filterHead'},
-   // {field: 'waitListed', displayName: 'Wait List', headerCellTemplate: 'partials/filterHead'},
-    {field: 'crn', displayName: 'CRN', headerCellTemplate: 'partials/filterHead'},
-    {field: 'sectionNum', displayName: 'Sect.', width: '5%'} //headerCellTemplate: 'partials/filterHead'},
-
-  ];
-
-
-
-
-  $scope.ngGridOptions = { 
-    data: 'courses',
-    columnDefs: colDefs,
-    plugins: [filterBarPlugin],
-    //give room for filter bar
-    headerRowHeight: 60 
-  };
+      }
+    });
 });
+
+function dateFromObjectId (objectId) {
+  return new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
+};

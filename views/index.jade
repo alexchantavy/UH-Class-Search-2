@@ -1,5 +1,49 @@
 extend layout
 block content
-  div(ng-controller='uhfindCtrl', class='container-fluid table')
-    div(ng-grid='ngGridOptions', class='ngGridStyle')
- 
+  div(ng-controller='uhfindCtrl', class='container-fluid')
+    p Data last updated {{lastUpdated}}
+    //- p
+    //-   strong Filter:
+    //-   {{tableParams.filter() | json}}  
+    table(ng-table='tableParams', show-filter='true', class='table table-hover table-condensed')
+      tr(ng-repeat='item in $data track by $index')   
+        td(data-title="'Course'"
+          filter="{'course': 'text'}"
+          sortable="'course'")
+          {{item.course}}
+        td(data-title="'Title'")
+          {{item.title}}
+        td(data-title="'Credits'"
+          filter="{'credits': 'text'}"
+          sortable="'credits'")
+          {{item.credits}}     
+        td(data-title="'Times'", colspan='4')
+          table(class='table table-condensed table-bordered')
+            thead
+              th Days
+              th Location
+              th Time 
+            tr(ng-repeat='time in item.mtgTime track by $index')
+              td {{time.days}}
+              td {{time.loc}}
+              td {{time.start}}-{{time.end}}
+        td(data-title="'Reqs Met'"
+          filter="{'genEdFocus': 'text'}"
+          sortable="'genEdFocus'")
+          {{item.genEdFocus}}
+        td(data-title="'Instructor'"
+          filter="{'instructor': 'text'}"
+          sortable="'instructor'")
+          {{item.instructor}}
+          //- RateMyProfessor lookup, makes the app really slow
+          //- a(href='http://www.ratemyprofessors.com/search.jsp?query1={{item.instructor.substring(2)}}&queryoption1=TEACHER&search_submit1=Search&prerelease=true'
+          //-   target='_blank') {{item.instructor}}
+        td(data-title="'Seats Avail'"
+          filter="{'seatsAvail': 'text'}"
+          sortable="'seatsAvail'")
+          {{item.seatsAvail}}
+        td(data-title="'CRN'"
+          filter="{'crn': 'text'}")
+          {{item.crn}}
+        td(data-title="'Section'")
+          {{item.sectionNum}}

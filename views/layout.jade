@@ -3,7 +3,7 @@ html(ng-app='uhfind')
   head
     title UH Class Finder
     link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
-    link(rel='stylesheet', href='http://angular-ui.github.com/ng-grid/css/ng-grid.css')
+    link(rel='stylesheet', href='http://bazalt-cms.com/assets/ng-table/0.3.0/ng-table.css')
     link(rel='stylesheet', href='/stylesheets/style.css')  
   body
     header
@@ -11,15 +11,12 @@ html(ng-app='uhfind')
     .container
       .main-content
         block content
-    footer
-      p github.com/alexchantavy
-      a(href='https://twitter.com/share', class='twitter-share-button', data-via='alexchantavy')Tweet
-    script
-      '!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?\'http\':\'https\';\
-      if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+\'://platform.twitter.com/widgets.js\';\
-      fjs.parentNode.insertBefore(js,fjs);}}(document, \'script\', \'twitter-wjs\');'
+    div(class='navbar-fixed-bottom')
+      div(class='container')
+        a(href='http://github.com/alexchantavy') GitHub
+        a(href='https://twitter.com/share') Tweet
   script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
   script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js')
-  script(src='js/ng-grid.min.js')
+  script(src='http://bazalt-cms.com/assets/ng-table/0.3.0/ng-table.js')
   script(src='js/controller.js')
   

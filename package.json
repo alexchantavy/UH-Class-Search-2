@@ -1,49 +1,44 @@
-
 {
   "name": "Power-Overwhelming",
   "version": "0.0.1",
   "description": "Graduate faster with this UH class finder",
-
   "keywords": [
-    "OpenShift",
     "Node.js",
     "application",
-    "openshift", 
     "phantomjs",
     "screen scrape",
     "chai"
   ],
-
+  "scripts": {
+    "test": "phantomjs test/run-tests.js",
+    "start": "node app.js"
+  },
   "author": {
     "name": "Alex Chantavy",
     "email": "chantavy@gmail.com",
     "url": "http://github.com/alexchantavy"
   },
-
-  "homepage": "http://www.openshift.com/",
+  "homepage": "http://uhfind.alexchantavy.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openshift/origin-server"
+    "url": "https://github.com/alexchantavy/UH-Class-Search-2"
   },
-
   "engines": {
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
     "async": "*",
     "express": "~3.4.4",
-    "stylus":  "0.29.x",
-    "jade":    "0.27.x",
+    "jade": "0.27.x",
     "mongodb": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "nib": "^1.0.2",
+    "stylus": "0.29.x"
   },
   "devDependencies": {
     "chai": "*"
   },
   "bundleDependencies": [],
-
-  "private": true,
-  "main": "server.js"
+  "private": true
 }

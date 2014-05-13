@@ -49,6 +49,7 @@ async.eachLimit(
       console.log(err);
     } else {
       console.log('done with ' + results.length + ' classes!');
+      // 'w' is overwrite.
       fs.write('data.json', JSON.stringify(results), 'w');
       console.log('Wrote data.json!');
       phantom.exit();

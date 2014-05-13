@@ -41,8 +41,8 @@ function getAllCourses(callback) {
         callback(err);
       } else {
         callback(null, docs);
-        mongoose.disconnect();
       } 
+      mongoose.disconnect();
     });
   });
 }

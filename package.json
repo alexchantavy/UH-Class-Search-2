@@ -8,11 +8,14 @@
     "OpenShift",
     "Node.js",
     "application",
-    "openshift", 
+    "openshift",
     "phantomjs",
     "screen scrape",
     "chai"
   ],
+  "scripts": {
+    "test": "phantomjs test/run-tests.js"
+  },
 
   "author": {
     "name": "Alex Chantavy",

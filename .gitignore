@@ -1,1 +1,7 @@
-node_modules
+*.DS_Store
+npm-debug.log
+node_modules/*
+.openshift/*
+derpenvironment
+.gitignore
+.png%

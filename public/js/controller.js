@@ -24,7 +24,14 @@ uhfind.controller('uhfindCtrl', function($scope, $http, $filter, ngTableParams) 
         .success(function(data) { 
 
           var m = dateFromObjectId(data[0]._id);
-          $scope.lastUpdated = m.getUTCFullYear() +"/"+ (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " " + m.getUTCHours() + ":" + m.getUTCMinutes() + ":" + m.getUTCSeconds();
+
+          // pad minutes-field with leading zero
+          var minutes = (m.getUTCMinutes() < 10)? '0' + m.getUTCMinutes() 
+                                                :      m.getUTCMinutes();
+
+          $scope.lastUpdated = m.getUTCFullYear() + "/" + 
+            (m.getUTCMonth()+1) +"/"+ m.getUTCDate() + " " + 
+             m.getUTCHours() + ":" + minutes + ":" + m.getUTCSeconds();
 
           // use built-in angular filter
           var filteredData = params.filter() ?

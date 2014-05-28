@@ -18,7 +18,7 @@ var stylusOpts = { src: __dirname + '/public',
 app.use(stylus.middleware(stylusOpts));
 
 app.use(express.static(__dirname + '/public'))
-app.use(express.logger('dev'));
+app.use(require('morgan')('dev'));
 
 
 
@@ -28,6 +28,6 @@ app.get('/partials/:name', routes.partials);
 app.get('/api/courses.json', api.courses);
 
 
-app.listen(3000, function(req, res) {
-  console.log('listening on 3000');
+app.listen(5000, function(req, res) {
+  console.log('listening on 5000');
 });

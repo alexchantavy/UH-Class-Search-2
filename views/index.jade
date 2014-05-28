@@ -1,6 +1,8 @@
 extend layout
 block content
   div(ng-controller='uhfindCtrl', class='container-fluid')
+    p Pre-alpha testing.  Reach out to me on Twitter 
+      a(href='http://www.twitter.com/alexchantavy') @alexchantavy 
     p Data last updated {{lastUpdated}}
     //- p
     //-   strong Filter:
@@ -11,7 +13,8 @@ block content
           filter="{'course': 'text'}"
           sortable="'course'")
           {{item.course}}
-        td(data-title="'Title'")
+        td(data-title="'Title'"
+          filter="{'title': 'text'}")
           {{item.title}}
         td(data-title="'Credits'"
           filter="{'credits': 'text'}"

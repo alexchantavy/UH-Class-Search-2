@@ -36,7 +36,8 @@ function getAllCourses(callback) {
   db.on('error', console.error.bind(console, 'connection error:'));
 
   db.once('open', function() {
-    Course.find({}).select().exec(function(err, docs) {
+    // sort by objectid descending
+    Course.find({}).sort({'_id': -1}).select().exec(function(err, docs) {
       if (err) {
         callback(err);
       } else {

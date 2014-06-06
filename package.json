@@ -10,7 +10,8 @@
     "chai"
   ],
   "scripts": {
-    "test": "phantomjs test/run-tests.js",
+    //"test": "phantomjs test/run-tests.js",
+    "test": "mocha -R spec",
     "start": "node app.js"
   },
   "author": {
@@ -34,7 +35,8 @@
     "mongodb": "*",
     "mongoose": "*",
     "nib": "^1.0.2",
-    "stylus": "0.29.x"
+    "stylus": "0.29.x",
+    "morgan": "*"
   },
   "devDependencies": {
     "chai": "*"

@@ -28,8 +28,12 @@ uhfind.fetchDeptCourses('ICS', function(res){
 ```
 
 
-# How to run tests
-TBH These are not really worth anything yet, I gotta fix this.
+# How to run db tests
 ```shell
-$> phantomjs test/run-tests.js
+$> npm test
+```
+
+# How to run phantomjs db tests
+```shell
+$>  < coming soon... >
 ```

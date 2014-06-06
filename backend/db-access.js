@@ -2,7 +2,13 @@
 
 var mongoose = require('mongoose'),
     fs       = require('fs'),
-    async    = require('async');
+    async    = require('async'),
+    cfg      = require('../conf/settings.json');
+
+var opts = {
+  user: cfg.db.username,
+  pass: cfg.db.password
+};
 
 var courseSchema = mongoose.Schema({
     course:       String,
@@ -31,7 +37,7 @@ var Course = mongoose.model('Course', courseSchema);
   @param callback: run this after we have saved everything
 */
 function getAllCourses(callback) {
-  mongoose.connect('mongodb://localhost/uhfind');
+  mongoose.connect('mongodb://alexchantavy.com/uhfind', opts);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -59,7 +65,7 @@ function saveCourseArray(catalog, callback) {
     callback('catalog is not an array');
   } else {
       
-    mongoose.connect('mongodb://localhost/uhfind');
+    mongoose.connect('mongodb://alexchantavy.com/uhfind', opts);
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
 

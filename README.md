@@ -3,7 +3,9 @@ uh-class-search-2
 
 Graduate faster with this UH class searcher. 
 
-Uses phantomjs for screen scraping.
+1. Screen scrapes UH class page with phantomjs
+2. Stores results in local MongoDB instance
+3. Displays interface with AngularJs.
 
 
 # License 

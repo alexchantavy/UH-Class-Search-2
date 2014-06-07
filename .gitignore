@@ -1,8 +1,7 @@
 *.DS_Store
 npm-debug.log
-node_modules/*
-.openshift/*
-derpenvironment
+node_modules/
+bower_components/
 .gitignore
 .png%
 conf/settings.json

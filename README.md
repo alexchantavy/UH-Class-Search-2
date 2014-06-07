@@ -28,10 +28,11 @@ uhfind.fetchDeptCourses('ICS', function(res){
 ```
 
 
-# How to run db tests
+# How to run tests
 ```shell
 $> npm test
 ```
+Will run the DB tests and test the frontend with `karma`.
 
 # How to run phantomjs db tests
 ```shell

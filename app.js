@@ -19,7 +19,8 @@ var stylusOpts = { src: __dirname + '/public',
 app.use(stylus.middleware(stylusOpts));
 
 app.use(express.static(__dirname + '/public'))
-app.use(morgan('short'));
+var format = ':remote-addr - [:date] ":method :url" :status ":referrer" ":user-agent" :response-time ms';
+app.use(morgan(format));
 
 
 

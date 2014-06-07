@@ -1,7 +1,7 @@
 // controller.js
 var uhfind = angular.module('uhfind', ['ngTable']);
 
-uhfind.controller('uhfindCtrl', function($scope, $http, $filter, ngTableParams) {
+uhfind.controller('uhfindCtrl', function($scope, $http, $filter) {
 
   $scope.lastUpdated;
   $scope.data = [];

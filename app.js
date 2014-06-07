@@ -1,5 +1,6 @@
 var express  = require('express'),
 	  app      = express(),
+    morgan   = require('morgan'),
     stylus   = require('stylus'),
     nib      = require('nib'),
     routes   = require('./routes'),
@@ -18,7 +19,7 @@ var stylusOpts = { src: __dirname + '/public',
 app.use(stylus.middleware(stylusOpts));
 
 app.use(express.static(__dirname + '/public'))
-app.use(require('morgan')('dev'));
+app.use(morgan('short'));
 
 
 

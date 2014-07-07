@@ -15,7 +15,7 @@ describe('Data Access Layer', function() {
       expect(docs).to.be.an('array');
       expect(docs[0].course).to.be.a('string');
       expect(docs[0].crn).to.be.a('number');
-      expect(docs[0].genEdFocus).to.be.a('string');
+      expect(docs[0].genEdFocus).to.be.an('array');
       expect(docs[0].instructor).to.be.a('string');
       expect(docs[0].mtgTime).to.be.an('array');
       expect(docs[0].mtgTime.length).to.not.equal(0);

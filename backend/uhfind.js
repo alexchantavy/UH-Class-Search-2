@@ -95,7 +95,8 @@ function UHFinder(baseUrl) {
           i++; 
         }
         course.genEdFocus    =  [];
-        course.genEdFocus    =  (rows[i].cells[0].textContent == ' ') ? 
+        // check for `&nbsp;` using char code 0xA0
+        course.genEdFocus    =  (rows[i].cells[0].textContent == '\xA0') ? 
                                          [] : 
                                          rows[i].cells[0].textContent.split(',');
         course.crn           =   rows[i].cells[1].textContent;

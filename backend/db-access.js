@@ -18,7 +18,7 @@ var courseSchema = mongoose.Schema({
     instructor:   String,
     mtgTime: [{
       dates:      String,
-      days:       String,
+      days:       [String],
       loc:        String,
       start:      String,
       end:        String

@@ -53,7 +53,7 @@ function UHFinder(baseUrl) {
   // scrape dat DOM.  private helper function.
   var scrapeDom = function() {
 
-     // return true if $test is a substring in $string
+    // return true if $test is a substring in $string
     var isSubstring = function(string, test) {
       return string.indexOf(test) > -1; 
     };
@@ -74,6 +74,39 @@ function UHFinder(baseUrl) {
         return 'TBA';
       } else {
         return ' ';
+      }
+    };
+
+    // helper function to convert days (e.g. "TR", "MWF") to array
+    // day codes include 
+    // M, T, W, R, F, S, SU, or TBA
+    var processDayString = function(days) {
+      if (typeof days == 'string') {
+        if (days == 'TBA') {
+          return ['TBA'];
+        }
+
+        var daysArray = [];
+
+        for (var i = 0, len = days.length; i < len; i++) {
+
+          var c = days.charAt(i);
+          // account for 'SU' = Sunday
+          switch(c) {
+            case 'U': 
+              break;
+            case 'S': 
+              if (i < len-1 && days.charAt(i+1) == 'U') {
+                daysArray.push('SU');
+                break;
+              }
+              // else: fall through to default case.
+            default:
+              daysArray.push(c);
+              break;
+          }
+        }
+        return daysArray;
       }
     };
 
@@ -106,16 +139,15 @@ function UHFinder(baseUrl) {
         course.credits       =   rows[i].cells[5].textContent;
         course.instructor    =   (rows[i].cells[6].textContent == 'TBA') ? 
                                          'TBA' : 
-                                                                   // get only last name
+                                         // get only last name
                                          rows[i].cells[6].textContent.substring(2);
         course.seatsAvail    =   rows[i].cells[7].textContent;
         course.waitListed    =   rows[i].cells[8].textContent; 
         course.waitAvail     =   rows[i].cells[9].textContent;
 
         course.mtgTime       = [];       
-
         course.mtgTime.push({
-                              'days'  : rows[i].cells[10].textContent, 
+                              'days'  : processDayString(rows[i].cells[10].textContent), 
                               'start' : getTime('start', rows[i].cells[11].textContent),
                               'end'   : getTime( 'end' , rows[i].cells[11].textContent),
                               'loc'   : rows[i].cells[12].textContent,
@@ -129,7 +161,7 @@ function UHFinder(baseUrl) {
           course.mtgTime.push({
                                 // '9' because for some reason theres 1 less <td>
                                 // in new columns
-                                'days'  : rows[i].cells[9].textContent,
+                                'days'  : processDayString(rows[i].cells[9].textContent),
                                 'start' : getTime('start', rows[i].cells[10].textContent),
                                 'end'   : getTime( 'end' , rows[i].cells[10].textContent),
                                 'loc'   : rows[i].cells[11].textContent,

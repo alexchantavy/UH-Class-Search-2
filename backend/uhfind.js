@@ -94,10 +94,10 @@ function UHFinder(baseUrl) {
           course.extraNotes = rows[i].cells[1].textContent;
           i++; 
         }
-
+        course.genEdFocus    =  [];
         course.genEdFocus    =  (rows[i].cells[0].textContent == ' ') ? 
-                                         '' : 
-                                         rows[i].cells[0].textContent;
+                                         [] : 
+                                         rows[i].cells[0].textContent.split(',');
         course.crn           =   rows[i].cells[1].textContent;
         course.course        =   rows[i].cells[2].textContent;
         course.sectionNum    =   rows[i].cells[3].textContent;

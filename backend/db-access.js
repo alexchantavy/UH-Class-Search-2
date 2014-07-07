@@ -14,7 +14,7 @@ var courseSchema = mongoose.Schema({
     course:       String,
     credits:      mongoose.Schema.Types.Mixed,
     crn:          Number,
-    genEdFocus:   String,
+    genEdFocus:   [String],
     instructor:   String,
     mtgTime: [{
       dates:      String,
@@ -44,16 +44,58 @@ function getAllCourses(callback) {
   db.once('open', function() {
     // sort by objectid descending
     Course.find({}).sort({'_id': -1}).select().exec(function(err, docs) {
+      mongoose.disconnect();
       if (err) {
         callback(err);
       } else {
         callback(null, docs);
       } 
-      mongoose.disconnect();
+
     });
   });
 }
 
+function get(searchOpts, callback) {
+  /*var validProps = [
+    "course",
+    "credits",
+    "crn",
+    "genEdFocus",
+    "instructor",
+    "mtgTime",
+    "dates",
+    "days",
+    "loc",
+    "start",
+    "end",
+    "seatsAvail",
+    "waitListed",
+    "waitAvail",
+    "sectionNum",
+    "title"
+  ];*/
+
+  mongoose.connect('mongodb://alexchantavy.com/uhfind', opts);
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  
+  db.once('open', function() {
+    var query = Course.find();
+    for (key in searchOpts) {
+      var value = searchOpts[key];
+      query.where(key).regex(value);
+    }
+    query.sort({'_id': -1}).select().exec(function(err, docs) {  
+      mongoose.disconnect();
+      if (err) {
+        callback(err);
+      } else { 
+        callback(null, docs);
+      }
+      
+    });
+  });
+}
 
 /* 
   saveCourseArray: upserts courses to database.
@@ -111,3 +153,4 @@ function saveCourseArray(catalog, callback) {
 
 module.exports.getAllCourses = getAllCourses;
 module.exports.saveCourseArray = saveCourseArray;
+module.exports.get = get;

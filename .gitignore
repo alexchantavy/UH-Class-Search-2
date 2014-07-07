@@ -5,3 +5,4 @@ bower_components/
 .gitignore
 .png%
 conf/settings.json
+.tmp

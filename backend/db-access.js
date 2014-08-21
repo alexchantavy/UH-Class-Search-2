@@ -75,7 +75,7 @@ function get(searchOpts, callback) {
     "title"
   ];*/
 
-  mongoose.connect('mongodb://alexchantavy.com/uhfind', opts);
+  mongoose.connect('mongodb://' + cfg.hostname +'/uhfind', opts);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   

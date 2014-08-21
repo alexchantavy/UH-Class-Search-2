@@ -37,7 +37,7 @@ var Course = mongoose.model('Course', courseSchema);
   @param callback: run this after we have saved everything
 */
 function getAllCourses(callback) {
-  mongoose.connect('mongodb://alexchantavy.com/uhfind', opts);
+  mongoose.connect('mongodb://' + cfg.hostname + '/uhfind', opts);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -55,6 +55,12 @@ function getAllCourses(callback) {
   });
 }
 
+/*
+get:
+@param searchOpts query options to pass to mongodb 
+@param callback   a callback
+Accepts query options for courses, returns results of db query to callback.
+*/
 function get(searchOpts, callback) {
   /*var validProps = [
     "course",
@@ -74,7 +80,6 @@ function get(searchOpts, callback) {
     "sectionNum",
     "title"
   ];*/
-
   mongoose.connect('mongodb://' + cfg.hostname +'/uhfind', opts);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));

@@ -18,6 +18,25 @@ https://tldrlegal.com/license/creative-commons-attribution-noncommercial-(cc-nc)
 
 # Rough Installation Guide
 Run these steps if you want to install this app on your own VPS/local machine.  Fine tune it for your specific MongoDB password and config.
+
+First create conf/settings.json.  It should look something like this:
+```json
+{
+  "hostname": "[your-mongo-db-hostname]",
+  "db": {
+    "username": "YourMongoDbUsername",
+    "password": "YourMongoDbPassword",
+    "database": "TheDatabaseNameWhereYouWantToSaveThisData"
+  },
+  "testdb": {
+    "username": "Same As",
+    "password": "Above Except",
+    "database": "This Is If You Want A Test DB"
+  },
+  "mode": "put 'prod' here for production or 'test' here for testing",
+}
+```
+
 ```shell
 git clone https://github.com/alexchantavy/UH-Class-Search-2.git
 npm install 

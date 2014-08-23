@@ -5,22 +5,6 @@ var mongoose = require('mongoose'),
     async    = require('async'),
     cfg      = require('../conf/settings.json');
 
-// Defaults
-var mongooseOpts = {
-    user: cfg.db.username,
-    pass: cfg.db.password
-};
-var databaseName = 'uhfind';
-
-// But if we're in TEST
-if (cfg.mode == 'test') {
-  mongooseOpts = {
-    user: cfg.testdb.username,
-    pass: cfg.testdb.password
-  };
-  databaseName = 'uhfind-test';
-}
-
 var courseSchema = mongoose.Schema({
     course:       String,
     credits:      mongoose.Schema.Types.Mixed,
@@ -47,8 +31,15 @@ var Course = mongoose.model('Course', courseSchema);
   getAllCourses: retrieves records of all courses from the database.
   @param callback: run this after we have saved everything
 */
-function getAllCourses(callback) {
-  mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, mongooseOpts);
+function getAllCourses(useTestDb, callback) {
+  var username = (useTestDb)? cfg.testdb.username : cfg.db.username
+  ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
+  ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
+
+  mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
+    user: username,
+    pass: password
+  });
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -61,7 +52,6 @@ function getAllCourses(callback) {
       } else {
         callback(null, docs);
       } 
-
     });
   });
 }
@@ -72,7 +62,7 @@ get:
 @param callback   a callback
 Accepts query options for courses, returns results of db query to callback.
 */
-function get(searchOpts, callback) {
+function get(searchOpts, useTestDb, callback) {
   /*var validProps = [
     "course",
     "credits",
@@ -91,15 +81,34 @@ function get(searchOpts, callback) {
     "sectionNum",
     "title"
   ];*/
-  mongoose.connect('mongodb://' + cfg.hostname +'/' + databaseName, mongooseOpts);
+  var username = (useTestDb)? cfg.testdb.username : cfg.db.username
+  ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
+  ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
+
+  mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
+    user: username,
+    pass: password
+  });
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   
   db.once('open', function() {
+
     var query = Course.find();
-    for (key in searchOpts) {
+
+    for (var key in searchOpts) {
+      query.where(key);
+
       var value = searchOpts[key];
-      query.where(key).regex(value);
+
+      // assumes that value passed is an array
+      if (key == 'days') {
+        query.in(value); 
+      }
+      else {
+        query.regex(value);        
+      }
+      
     }
     query.sort({'_id': -1}).select().exec(function(err, docs) {  
       mongoose.disconnect();
@@ -118,12 +127,19 @@ function get(searchOpts, callback) {
   @param catalog: an array of courses returned from UHFind.fetchDeptCourses().
   @param callback: run this after we have saved everything
 */
-function saveCourseArray(catalog, callback) {
+function saveCourseArray(catalog, useTestDb, callback) {
   if ( ! Array.isArray(catalog)) {
     callback('catalog is not an array');
   } else {
-      
-    mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, mongooseOpts);
+    var username = (useTestDb)? cfg.testdb.username : cfg.db.username
+    ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
+    ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
+
+    mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
+      user: username,
+      pass: password
+    });
+
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -153,11 +169,11 @@ function saveCourseArray(catalog, callback) {
 
         // done with all items
         function(err) {
+          mongoose.disconnect();
           if (err) {
             console.log(err);
           } else {
             console.log('saved to db!');
-            mongoose.disconnect();
             callback();
           }
         }

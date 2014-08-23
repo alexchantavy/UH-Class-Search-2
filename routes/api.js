@@ -1,7 +1,7 @@
 var dbAccess = require('../backend/db-access.js');
 
 module.exports.courses = function(req, res) {
-  dbAccess.getAllCourses(function(err, docs) {
+  dbAccess.getAllCourses(false, function(err, docs) {
     if (err) {
       console.log(JSON.stringify(err, undefined, 2));
       res.send('error!');

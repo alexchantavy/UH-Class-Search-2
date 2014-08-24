@@ -32,10 +32,12 @@ var Course = mongoose.model('Course', courseSchema);
   @param callback: run this after we have saved everything
 */
 function getAllCourses(useTestDb, callback) {
-  var username = (useTestDb)? cfg.testdb.username : cfg.db.username
-  ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
-  ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
-
+  var username =     (useTestDb)? cfg.testdb.username : cfg.db.username
+  ,   password =     (useTestDb)? cfg.testdb.password : cfg.db.password
+  ,   databaseName = (useTestDb)? 'uhfind-test'       : 'uhfind';
+  if (useTestDb) {
+    console.log("attempting to connect to test db...");
+  }
   mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
     user: username,
     pass: password
@@ -57,10 +59,18 @@ function getAllCourses(useTestDb, callback) {
 }
 
 /*
-get:
+get: Accepts query options for courses, returns results of db query to 
+callback.
+Examples:
+{genEdFocus:['WI', 'OC']} ->  find all courses that are WI _and_ OC
+{course:'ICS'} -> find all 'ICS' courses
+{days: 'T', 'R'} -> find all courses that are on Tuesday _or_ Thursday
+{credits: 3}
+{seatsAvail: true}
+
 @param searchOpts query options to pass to mongodb 
 @param callback   a callback
-Accepts query options for courses, returns results of db query to callback.
+
 */
 function get(searchOpts, useTestDb, callback) {
   /*var validProps = [
@@ -85,6 +95,10 @@ function get(searchOpts, useTestDb, callback) {
   ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
   ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
 
+  if (useTestDb) {
+    mongoose.set('debug', true);
+  }
+
   mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
     user: username,
     pass: password
@@ -94,19 +108,49 @@ function get(searchOpts, useTestDb, callback) {
   
   db.once('open', function() {
 
+    // Query builder.
     var query = Course.find();
 
     for (var key in searchOpts) {
-      query.where(key);
-
       var value = searchOpts[key];
 
-      // assumes that value passed is an array
-      if (key == 'days') {
-        query.in(value); 
-      }
-      else {
+      if (key == 'genEdFocus') {
+
+        // db.courses.find({ 
+        //   $and: [
+        //    { "genEdFocus": /OC/},
+        //    { "genEdFocus": /WI/}
+        //   ]
+        // });
+
+        var genEdFocusList = [];
+        for (var i = 0, len = value.length; i < len; i++) {
+          genEdFocusList.push( { "genEdFocus" : {'$regex': value[i] } } );
+        }
+        query.and(genEdFocusList);
+
+      } else if (key == 'mtgTime.days') {
+
+        query.where(key);
+        query.in(value);
+
+      } else if (key == 'course') {
+
+        query.where(key);
         query.regex(value);        
+
+      } else if (key == 'credits') {
+
+        // TODO: how the hell do i handle courses with "1.5" credits or 
+        // "1-6" credits.  blaaah
+        query.where(key);
+        query.regex(value);
+
+      } else if (key == 'seatsAvail') {
+
+        if (value == true) {
+          query.gt('seatsAvail', 0);
+        }
       }
       
     }

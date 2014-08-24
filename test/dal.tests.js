@@ -6,15 +6,12 @@ var chai = require('chai'),
     dal = require('../backend/db-access');
 chai.use(require('chai-things'));
 
-// Use the test database.  Because we never modify it, we know exactly
-// what values to expect.
-var useTestDb = true;
 
 describe('Data Access Layer', function() {
 
   it('should grab all courses from the db', function(done) {
-    this.timeout(10000);
-    dal.getAllCourses(useTestDb, function(err, docs) {
+    this.timeout(15000);
+    dal.getAllCourses(true, function(err, docs) {
       expect(err).to.equal(null);
       expect(docs).to.be.an('array');
       expect(docs[0].course).to.be.a('string');
@@ -38,9 +35,9 @@ describe('Data Access Layer', function() {
   });
 
   it('can query the database by `course`', function(done) {
-    this.timeout(10000);
+    this.timeout(15000);
     var opts = { course: 'ICS' };
-    dal.get(opts, useTestDb, function(err, res) {
+    dal.get(opts, true, function(err, res) {
       expect(res.length).to.equal(60);
       for (var i = 0, len = res.length; i < len; i++) {
         expect(res[i].course).to.match(/^ICS/);
@@ -48,27 +45,46 @@ describe('Data Access Layer', function() {
       done();
     });
   });
+
+  // db.courses.find({"credits": /6/}).count();
+  it ('can query the database for `credits`', function(done) {
+    this.timeout(15000);
+    var opts = {
+      credits: '6'
+    };
+    dal.get(opts, true, function(err, res) {
+      expect(res.length).to.equal(142);
+      done();
+    });
+  });
+
     // meaningful ways to query the database:
-    // by genEdFocus
-    // by course
-    // by credits
-    // by days
+    // by genEdFocus [done]
+    // by course [done]
+    // by credits [done, sort of]
+    // by days [done]
     // by start
     // by end
-    // by seatsAvail
-  it ('can query the database for `course` and multiple `genEdFocus`', function(done) {
-    this.timeout(10000);
+    // by seatsAvail [done]
+
+
+  // db.courses.find({ 
+  //   $and: [
+  //    { "genEdFocus": /OC/},
+  //    {"genEdFocus": /WI/}
+  //   ]
+  // });
+  it ('can query the db for classes that have multiple genEdFocus', function(done) {
+    this.timeout(15000);
     var opts = {
-      course: 'PLAN',
       genEdFocus: ['WI','OC']
     };
-    dal.get(opts, useTestDb, function(err, res) {
+    dal.get(opts, true, function(err, res) {
       var foundWI = false;
       var foundOC = false;
-
+      expect (res.length).to.equal(31);
       //test all items in the returned list for consistency
       for (var i = 0, len = res.length; i < len; i++) {
-        expect(res[i].course).to.match(/^PLAN/);
         if (res[i].genEdFocus.indexOf('WI') > -1) foundWI = true;
         if (res[i].genEdFocus.indexOf('OC') > -1) foundOC = true;
       }
@@ -80,14 +96,27 @@ describe('Data Access Layer', function() {
   });
 
   it ('can query the database by days available', function(done) {
-    this.timeout(10000);
+    this.timeout(15000);
     // db.courses.find({"mtgTime.days": {$in: ["T", "R"] }}).count();
     var opts = {
       "mtgTime.days": ['T', 'R']
     };
-    dal.get(opts, useTestDb, function (err, res){
+    dal.get(opts, true, function (err, res){
       expect(res.length).to.equal(1582);
       done();
     });
-  })
+  });
+
+  it ('can return only classes that have open seats', function(done) {
+    this.timeout(15000);
+    // db.courses.find({"mtgTime.days": {$in: ["T", "R"] }}).count();
+    var opts = {
+      seatsAvail: true
+    };
+    dal.get(opts, true, function (err, res){
+      expect(res.length).to.equal(2588);
+      done();
+    });
+  });
+
 });

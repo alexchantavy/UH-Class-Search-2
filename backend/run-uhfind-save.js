@@ -15,7 +15,7 @@ if (!catalog) {
   console.log('run grab.sh!  don\'t run this directly!')
 } else {
   var start = process.hrtime();
-  dbAccess.saveCourseArray(catalog, function(err) {
+  dbAccess.saveCourseArray(catalog, false, function(err) {
     if (err) {
       console.log(err)
     } else {

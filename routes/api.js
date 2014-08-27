@@ -31,5 +31,53 @@ module.exports.courses = function(req, res) {
       }
 
     }
-  });  
+  });    
+};
+
+
+/**
+ *  List of possible GET params:
+ *  genEdFocus
+ *  course
+ *  credits
+ *  days
+ *  start
+ *  end
+ *  seatsAvail 
+ **/
+module.exports.search = function(req, res) {
+  // build our options object from the get params
+
+  var opts = {};
+  if (req.query.genEdFocus != null) {
+    opts.genEdFocus = req.query.genEdFocus;
+  }
+  if (req.query.course != null) {
+    opts.course = req.query.course;
+  }
+  if (req.query.credits != null) {
+    opts.credits = req.query.credits;
+  }
+  if (req.query.days != null) {
+    opts["mtgTime.days"] = req.query.days;
+  }
+  if (req.query.start != null) {
+    opts["mtgTime.start"] = req.query.start;
+  }
+  if (req.query.end != null) {
+    opts["mtgTime.end"] = req.query.end;
+  }
+  if (req.query.seatsAvail != null) {
+    opts.seatsAvail = req.query.seatsAvail;
+  }
+
+  // run the query
+  dbAccess.get(opts, false, function(err, docs) {
+    if (err) {
+      console.log('ho someting wen break.');
+      console.log(err);
+    } else {
+      res.json(docs);
+    }
+  });
 };

@@ -119,4 +119,28 @@ describe('Data Access Layer', function() {
     });
   });
 
+  it ('can query the database for start times', function(done) {
+    this.timeout(15000);
+    // db.courses.find({'mtgTime.start': /0900/}).
+    var opts = {
+      "mtgTime.start": '0900'
+    };
+    dal.get(opts, true, function (err, res){
+      expect(res.length).to.equal(312);
+      done();
+    });
+  });
+
+  it ('can query the database for end times', function(done) {
+    this.timeout(15000);
+    // db.courses.find({'mtgTime.end': /0900/})
+    var opts = {
+      "mtgTime.end": '0900a'
+    };
+    dal.get(opts, true, function (err, res){
+      expect(res.length).to.equal(7);
+      done();
+    });
+  });
+
 });

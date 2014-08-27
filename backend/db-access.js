@@ -151,6 +151,12 @@ function get(searchOpts, useTestDb, callback) {
         if (value == true) {
           query.gt('seatsAvail', 0);
         }
+      } else if (key == 'mtgTime.start' || key == 'mtgTime.end' ) {
+        // Example valid mtgTime.start: '0900'.
+        // Example valid mtgTime.end:   '0900a'.  
+        query.where(key);
+        query.regex(value);
+
       }
       
     }

@@ -74,38 +74,38 @@ describe('Data Access Layer', function() {
   //    {"genEdFocus": /WI/}
   //   ]
   // });
-  it ('can query the db for classes that have multiple genEdFocus', function(done) {
-    this.timeout(15000);
-    var opts = {
-      genEdFocus: ['WI','OC']
-    };
-    dal.get(opts, true, function(err, res) {
-      var foundWI = false;
-      var foundOC = false;
-      expect (res.length).to.equal(31);
-      //test all items in the returned list for consistency
-      for (var i = 0, len = res.length; i < len; i++) {
-        if (res[i].genEdFocus.indexOf('WI') > -1) foundWI = true;
-        if (res[i].genEdFocus.indexOf('OC') > -1) foundOC = true;
-      }
+  // it ('can query the db for classes that have multiple genEdFocus', function(done) {
+  //   this.timeout(15000);
+  //   var opts = {
+  //     genEdFocus: ['WI','OC']
+  //   };
+  //   dal.get(opts, true, function(err, res) {
+  //     var foundWI = false;
+  //     var foundOC = false;
+  //     expect (res.length).to.equal(31);
+  //     //test all items in the returned list for consistency
+  //     for (var i = 0, len = res.length; i < len; i++) {
+  //       if (res[i].genEdFocus.indexOf('WI') > -1) foundWI = true;
+  //       if (res[i].genEdFocus.indexOf('OC') > -1) foundOC = true;
+  //     }
 
-      expect(foundWI).to.be.true;
-      expect(foundOC).to.be.true;
-      done();
-    });
-  });
+  //     expect(foundWI).to.be.true;
+  //     expect(foundOC).to.be.true;
+  //     done();
+  //   });
+  // });
 
-  it ('can query the database by days available', function(done) {
-    this.timeout(15000);
-    // db.courses.find({"mtgTime.days": {$in: ["T", "R"] }}).count();
-    var opts = {
-      "mtgTime.days": ['T', 'R']
-    };
-    dal.get(opts, true, function (err, res){
-      expect(res.length).to.equal(1582);
-      done();
-    });
-  });
+  // it ('can query the database by days available', function(done) {
+  //   this.timeout(15000);
+  //   // db.courses.find({"mtgTime.days": {$in: ["T", "R"] }}).count();
+  //   var opts = {
+  //     "mtgTime.days": ['T', 'R']
+  //   };
+  //   dal.get(opts, true, function (err, res){
+  //     expect(res.length).to.equal(1582);
+  //     done();
+  //   });
+  // });
 
   it ('can return only classes that have open seats', function(done) {
     this.timeout(15000);

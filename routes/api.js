@@ -68,7 +68,7 @@ module.exports.search = function(req, res) {
     opts.end = req.query.end;
   }
   if (req.query.seatsAvail != null && req.query.seatsAvail != '') {
-    opts.seatsAvail = req.query.seatsAvail;
+    opts.seatsAvail = true;
   }
   console.log(opts);
   // run the query

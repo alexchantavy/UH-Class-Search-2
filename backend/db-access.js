@@ -110,62 +110,67 @@ function get(searchOpts, useTestDb, callback) {
 
     // Query builder.
     var query = Course.find();
+    var conditionList = [];
 
     for (var key in searchOpts) {
       var value = searchOpts[key];
-
-      if (key == 'genEdFocus') {
-
-        // db.courses.find({ 
-        //   $and: [
-        //    { "genEdFocus": /OC/},
-        //    { "genEdFocus": /WI/}
-        //   ]
-        // });
-
-        var genEdFocusList = [];
-        for (var i = 0, len = value.length; i < len; i++) {
-          genEdFocusList.push( { "genEdFocus" : {'$regex': value[i] } } );
-        }
-        query.and(genEdFocusList);
-
-      } else if (key == 'days') {
-
-        query.where("mtgTime.days");
-        query.in(value);
-
-      } else if (key == 'course') {
-
-        query.where(key);
-        query.regex(value);        
-
-      } else if (key == 'credits') {
-
-        // TODO: how the hell do i handle courses with "1.5" credits or 
-        // "1-6" credits.  blaaah
-        query.where(key);
-        query.regex(value);
-
-      } else if (key == 'seatsAvail') {
-
-        if (value == true) {
-          query.gt('seatsAvail', 0);
-        }
-      } else if (key == 'start' ) {
-        // Example valid mtgTime.start: '0900'.
-        // Example valid mtgTime.end:   '0900a'.  
-        query.where("mtgTime.start");
-        query.regex(value);
-
-      } else if (key == 'end') {
-
-        query.where("mtgTime.end");
-        query.regex(value);
-
-      }
-
       
+      if (key == 'genEdFocus') {
+        conditionList.push({ 
+          "genEdFocus" : value 
+        });
+
+      } 
+      if (key == 'days') {
+        conditionList.push({
+          "mtgTime.days": value
+        });
+        
+      } 
+      if (key == 'course') {
+        conditionList.push({
+          "course": { '$regex': value }
+        });    
+
+      } 
+      if (key == 'credits') {
+        // can only match credit counts with regex because some
+        // of the data contains values like '1-5'.
+        conditionList.push({
+          "credits": { '$regex': value }
+        }); 
+
+      } 
+      if (key == 'seatsAvail') {
+        if (value == true) {
+          conditionList.push({
+            "seatsAvail": { '$gt': 0 }
+          }); 
+        }
+
+      } 
+      if (key == 'start' ) {
+        // Example valid mtgTime.start: '0900'.
+        conditionList.push({
+          "mtgTime.start" : {'$regex': value}
+        })
+
+      } 
+      if (key == 'end') {
+        // Example valid mtgTime.end:   '0900a'.  
+        conditionList.push({
+          "mtgTime.end": {'$regex': value}
+        }); 
+
+      }      
+    } // end for
+
+    if (conditionList.length > 1) {
+      query.and(conditionList);
+    } else if (conditionList.length == 1) {
+      query.where(conditionList[1]);
     }
+
     query.sort({'_id': -1}).select().exec(function(err, docs) {  
       mongoose.disconnect();
       if (err) {

@@ -28,7 +28,7 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
 app.get('/api/courses.json', api.courses);
-
+app.get('/api/search', api.search);
 
 app.listen(5000, function(req, res) {
   console.log('listening on 5000');

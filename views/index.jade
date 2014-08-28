@@ -1,52 +1,221 @@
 extend layout
 block content
-  div(ng-controller='uhfindCtrl', class='container-fluid')
-    p Pre-alpha testing.  Reach out to me on Twitter 
-      a(href='http://www.twitter.com/alexchantavy') @alexchantavy 
-    p Data last updated {{lastUpdated}}
-    //- p
-    //-   strong Filter:
-    //-   {{tableParams.filter() | json}}  
-    table(ng-table='tableParams', show-filter='true', class='table table-hover table-condensed')
-      tr(ng-repeat='item in $data track by $index')   
-        td(data-title="'Course'"
-          filter="{'course': 'text'}"
-          sortable="'course'")
-          {{item.course}}
-        td(data-title="'Title'"
-          filter="{'title': 'text'}")
-          {{item.title}}
-        td(data-title="'Credits'"
-          filter="{'credits': 'text'}"
-          sortable="'credits'")
-          {{item.credits}}     
-        td(data-title="'Times'", colspan='4')
-          table(class='table table-condensed table-bordered')
-            thead
-              th Days
-              th Location
-              th Time 
-            tr(ng-repeat='time in item.mtgTime track by $index')
-              td {{time.days}}
-              td {{time.loc}}
-              td {{time.start}}-{{time.end}}
-        td(data-title="'Reqs Met'"
-          filter="{'genEdFocus': 'text'}"
-          sortable="'genEdFocus'")
-          {{item.genEdFocus}}
-        td(data-title="'Instructor'"
-          filter="{'instructor': 'text'}"
-          sortable="'instructor'")
-          {{item.instructor}}
-          //- RateMyProfessor lookup, makes the app really slow
-          //- a(href='http://www.ratemyprofessors.com/search.jsp?query1={{item.instructor.substring(2)}}&queryoption1=TEACHER&search_submit1=Search&prerelease=true'
-          //-   target='_blank') {{item.instructor}}
-        td(data-title="'Seats Avail'"
-          filter="{'seatsAvail': 'text'}"
-          sortable="'seatsAvail'")
-          {{item.seatsAvail}}
-        td(data-title="'CRN'"
-          filter="{'crn': 'text'}")
-          {{item.crn}}
-        td(data-title="'Section'")
-          {{item.sectionNum}}
+  form(role='form', method="get", action="/api/search")
+    div(class='form-group')
+      label(for="course") Course Designator
+      select(class='form-control', name='course', id="course")
+        option ACC 
+        option ACM
+        option AMST
+        option ANAT
+        option ANSC
+        option ANTH
+        option APDM
+        option ARAB
+        option ARCH
+        option ART
+        option AS
+        option ASAN
+        option ASTR
+        option BE
+        option BIOC
+        option BIOL
+        option BIOM
+        option BLAW
+        option BOT
+        option BUS
+        option CAAM
+        option CAM
+        option CAS
+        option CEE
+        option CHAM
+        option CHEM
+        option CHN
+        option CIS
+        option CMB
+        option COM
+        option CSD
+        option CUL
+        option DH
+        option DIS
+        option DNCE
+        option DRB
+        option EALL
+        option ECON
+        option EDCS
+        option EDEA
+        option EDEF
+        option EDEP
+        option EE
+        option ELI
+        option ENG
+        option ENGR
+        option ES
+        option ETEC
+        option FAMR
+        option FIL
+        option FIN
+        option FMCH
+        option FR
+        option FSHN
+        option GEOG
+        option GER
+        option GERI
+        option GG
+        option GRK
+        option HAW
+        option HIST
+        option HNDI
+        option HON
+        option HRM
+        option HWST
+        option ICS
+        option ILO
+        option IND
+        option INS
+        option IP
+        option IS
+        option ITAL
+        option ITE
+        option ITM
+        option JOUR
+        option JPN
+        option KOR
+        option KRS
+        option LAIS
+        option LATN
+        option LAW
+        option LING
+        option LIS
+        option LLEA
+        option LLL
+        option LLM
+        option LWEV
+        option LWJT
+        option LWLW
+        option LWPA
+        option LWUL
+        option MAO
+        option MATH
+        option MBBE
+        option MDED
+        option ME
+        option MED
+        option MEDT
+        option MET
+        option MGT
+        option MICR
+        option MKT
+        option MSL
+        option MUS
+        option NHH
+        option NREM
+        option NURS
+        option OBGN
+        option OCN
+        option OEST
+        option ORE
+        option PACE
+        option PACS
+        option PATH
+        option PED
+        option PEPS
+        option PH
+        option PHIL
+        option PHRM
+        option PHYL
+        option PHYS
+        option PLAN
+        option POLS
+        option PORT
+        option PPC
+        option PPST
+        option PSTY
+        option PSY
+        option PUBA
+        option RE
+        option REL
+        option REPR
+        option RUS
+        option SAM
+        option SLS
+        option SNSK
+        option SOC
+        option SOCS
+        option SP
+        option SPAN
+        option SPED
+        option SURG
+        option SW
+        option TAHT
+        option THAI
+        option THEA
+        option TI
+        option TIM
+        option TONG
+        option TPSS
+        option TRMD
+        option VIET
+        option WS
+        option ZOOL
+    div(class="form-group")
+      label(for="genEdFocus") Gen-Ed Focus Requirement
+        //-- need to do ANDS on requirements.
+      select(class='form-control', name='genEdFocus', id="genEdFocus")
+        option DA
+        option DB 
+        option DH
+        option DL 
+        option DP
+        option DS 
+        option DY 
+        option HSL
+        option NI
+        option ETH
+        option HAP
+        option OC
+        option WI
+        option FGA
+        option FGB
+        option FGC
+        option FS
+        option FW
+    div(class="form-group")
+      label(for="credits") Credits
+      select(class='form-control', name='credits', id="credits")
+        option 1
+        option 2
+        option 3
+        option 4
+        option 5
+        option 6
+        option 7
+        option 8
+        option 9
+        option 10
+        option 11
+        option 12
+        option 13
+        option 14
+        option 15
+        option 16
+    div(class="form-group")
+      label(for="days") Days
+      select(class="form-control", name="days", id="days")
+        option M
+        option T
+        option W
+        option R
+        option F
+        option S
+        option SU
+    div(class="form-group")
+      label(for="start") Start Time
+      input(type="text", class="form-control", placeholder="example 0900, 1030, 0300p", name="start", id="start")
+    div(class="form-group")
+      label(for="end") End Time
+      input(type="text", class="form-control", placeholder="example 0900, 1030, 0300p", name="end")
+    div(class="form-group")
+      label(for="seatsAvail") Seats Available?
+        input(type="checkbox", id="seatsAvail", name="seatsAvail")
+    button(type="submit", class="btn btn-large") Search

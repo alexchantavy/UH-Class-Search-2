@@ -95,9 +95,9 @@ function get(searchOpts, useTestDb, callback) {
   ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
   ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
 
-  if (useTestDb) {
+  //if (useTestDb) {
     mongoose.set('debug', true);
-  }
+  //}
 
   mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
     user: username,
@@ -129,9 +129,9 @@ function get(searchOpts, useTestDb, callback) {
         }
         query.and(genEdFocusList);
 
-      } else if (key == 'mtgTime.days') {
+      } else if (key == 'days') {
 
-        query.where(key);
+        query.where("mtgTime.days");
         query.in(value);
 
       } else if (key == 'course') {
@@ -151,13 +151,19 @@ function get(searchOpts, useTestDb, callback) {
         if (value == true) {
           query.gt('seatsAvail', 0);
         }
-      } else if (key == 'mtgTime.start' || key == 'mtgTime.end' ) {
+      } else if (key == 'start' ) {
         // Example valid mtgTime.start: '0900'.
         // Example valid mtgTime.end:   '0900a'.  
-        query.where(key);
+        query.where("mtgTime.start");
+        query.regex(value);
+
+      } else if (key == 'end') {
+
+        query.where("mtgTime.end");
         query.regex(value);
 
       }
+
       
     }
     query.sort({'_id': -1}).select().exec(function(err, docs) {  

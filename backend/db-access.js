@@ -91,6 +91,10 @@ function get(searchOpts, useTestDb, callback) {
     "sectionNum",
     "title"
   ];*/
+  if (searchOpts == null || searchOpts.length < 1) {
+    callback({message:'noCriteriaGiven'});
+  }
+
   var username = (useTestDb)? cfg.testdb.username : cfg.db.username
   ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
   ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
@@ -169,9 +173,13 @@ function get(searchOpts, useTestDb, callback) {
       query.and(conditionList);
     } else if (conditionList.length == 1) {
       query.where(conditionList[0]);
+    } else {
+      // this should never happen
+      mongoose.disconnect();
+      callback({message:'noCriteriaGiven'});
     }
 
-    query.sort({'_id': -1}).select().exec(function(err, docs) {  
+    query.sort({'course': 1}).select().exec(function(err, docs) {  
       mongoose.disconnect();
       if (err) {
         callback(err);

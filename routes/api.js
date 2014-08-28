@@ -82,8 +82,11 @@ module.exports.search = function(req, res) {
     if (err) {
       console.log('ho someting wen break.');
       console.log(err);
+      if (err.message == 'noCriteriaGiven') {
+        res.render('gopicksearch');
+      }
     } else {
-      res.render('table', {courses: courses});
+      res.render('table', {"courses": courses});
     }
   });
 };

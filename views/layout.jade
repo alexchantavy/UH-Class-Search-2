@@ -1,20 +1,25 @@
 !!!5
 html(ng-app='uhfind')
   head
-    title UH Manoa Class Finder
+    title UH Find - build the perfect Manoa schedule
     link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
     link(rel='stylesheet', href='http://bazalt-cms.com/assets/ng-table/0.3.0/ng-table.css')
     link(rel='stylesheet', href='/stylesheets/style.css')  
   body
     header
-      h1 UH Manoa Class Catalog
+      h1: a(href="/", style="color:#000000") UH Find
     .container
-      .main-content
-        block content
-    //- div(class='navbar-fixed-bottom')
-    //-   div(class='container')
-    //-     a(href='http://github.com/alexchantavy') GitHub
-    //-     a(href='https://twitter.com/share') Tweet
+      //--      .main-content
+      block content
+    div(class='footer')
+         //-- div(class='navbar-fixed-bottom container')
+         div(class='container')
+           p 
+            | <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+            | Alex Chantavy
+           a(href='/about') About
+           |
+           a(href='/donations') Donations
   script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
   script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js')
   script(src='http://bazalt-cms.com/assets/ng-table/0.3.0/ng-table.js')

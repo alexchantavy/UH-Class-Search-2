@@ -1,41 +1,41 @@
 extend layout
 block content
   div(class='container-fluid')
-    p Pre-alpha testing.  Reach out to me on Twitter 
-      a(href='http://www.twitter.com/alexchantavy') @alexchantavy 
-    table(class='table table-hover table-striped')
-      thead
-        th Course
-        th Title
-        th Credits
-        th Meeting Time 
-        th Reqs Met
-        th Instructor
-        th Seats Avail
-        th CRN
-        th Section
-      tbody
-      each item in courses
-        tr
-          td= item.course
-          td= item.title
-          td= item.credits
-          td
-            table(class='table')
-              //--thead
-                //--th Days
-                //--th Location
-                //--th Time
-              each time in item.mtgTime
-                tr 
-                  td(style="border:none; width:33%")= time.days
-                  td(style="border:none; width:33%")= time.loc
-                  td(style="border:none; width:33%")= time.start + '-' + time.end
-          td= item.genEdFocus
-          td 
-            a(href='http://www.ratemyprofessors.com/search.jsp?query1=#{item.instructor}&queryoption1=TEACHER&search_submit1=Search&prerelease=true'
-              target='_blank') #{item.instructor}
-          td= item.seatsAvail
-          td= item.crn
-          td= item.sectionNum
+    p #{courses.length} matching classes found. 
+    if (courses.length > 0)
+      table(class='table table-hover table-striped')
+        thead
+          th Course
+          th Title
+          th Seats Avail
+          th Credits
+          th Meeting Time 
+          th Reqs Met
+          th Instructor
+          th CRN
+          th Section
+        tbody
+        each item in courses
+          tr
+            td= item.course
+            td= item.title
+            td= item.seatsAvail
+            td= item.credits
+            td
+              table(class='table')
+                //--thead
+                  //--th Days
+                  //--th Location
+                  //--th Time
+                each time in item.mtgTime
+                  tr 
+                    td(style="border:none; width:33%")= time.days
+                    td(style="border:none; width:33%")= time.loc
+                    td(style="border:none; width:33%")= time.start + '-' + time.end
+            td= item.genEdFocus
+            td 
+              a(href='http://www.ratemyprofessors.com/search.jsp?query1=#{item.instructor}&queryoption1=TEACHER&search_submit1=Search&prerelease=true'
+                target='_blank') #{item.instructor}
+            td= item.crn
+            td= item.sectionNum
 

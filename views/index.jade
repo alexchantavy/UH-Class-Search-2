@@ -4,6 +4,7 @@ block content
     div(class='form-group')
       label(for="course") Course Designator
       select(class='form-control', name='course', id="course")
+        option Any
         option ACC 
         option ACM
         option AMST
@@ -162,6 +163,7 @@ block content
       label(for="genEdFocus") Gen-Ed Focus Requirement
         //-- need to do ANDS on requirements.
       select(class='form-control', name='genEdFocus', id="genEdFocus")
+        option Any
         option DA
         option DB 
         option DH
@@ -183,6 +185,7 @@ block content
     div(class="form-group")
       label(for="credits") Credits
       select(class='form-control', name='credits', id="credits")
+        option Any
         option 1
         option 2
         option 3
@@ -202,6 +205,7 @@ block content
     div(class="form-group")
       label(for="days") Days
       select(class="form-control", name="days", id="days")
+        option Any
         option M
         option T
         option W
@@ -210,10 +214,10 @@ block content
         option S
         option SU
     div(class="form-group")
-      label(for="start") Start Time
+      label(for="start") Start Time (leave blank for "Any")
       input(type="text", class="form-control", placeholder="example 0900, 1030, 0300p", name="start", id="start")
     div(class="form-group")
-      label(for="end") End Time
+      label(for="end") End Time (leave blank for "Any")
       input(type="text", class="form-control", placeholder="example 0900, 1030, 0300p", name="end")
     div(class="form-group")
       label(for="seatsAvail") Seats Available?

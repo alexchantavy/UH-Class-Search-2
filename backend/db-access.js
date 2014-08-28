@@ -168,7 +168,7 @@ function get(searchOpts, useTestDb, callback) {
     if (conditionList.length > 1) {
       query.and(conditionList);
     } else if (conditionList.length == 1) {
-      query.where(conditionList[1]);
+      query.where(conditionList[0]);
     }
 
     query.sort({'_id': -1}).select().exec(function(err, docs) {  

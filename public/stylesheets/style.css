@@ -1,7 +1,3 @@
-.ngGridStyle {
-  height: 570px;
-  word-wrap: normal;
-}
-.ngCellText {
-  word-wrap: normal;
+th {
+  text-align: center
 }

@@ -49,22 +49,28 @@ module.exports.search = function(req, res) {
   // build our options object from the get params
 
   var opts = {};
-  if (req.query.genEdFocus != null && req.query.genEdFocus != '') {
+  if (req.query.genEdFocus != null && req.query.genEdFocus != '' &&
+      req.query.genEdFocus != 'Any') {
     opts.genEdFocus = req.query.genEdFocus;
   }
-  if (req.query.course != null && req.query.course != '') {
+  if (req.query.course != null && req.query.course != '' &&
+      req.query.course != 'Any') {
     opts.course = req.query.course;
   }
-  if (req.query.credits != null && req.query.credits != '') {
+  if (req.query.credits != null && req.query.credits != '' &&
+      req.query.credits != 'Any') {
     opts.credits = req.query.credits;
   }
-  if (req.query.days != null && req.query.days != '') {
+  if (req.query.days != null && req.query.days != '' &&
+      req.query.days != 'Any') {
     opts.days = req.query.days;
   }
-  if (req.query.start != null && req.query.start != '') {
+  if (req.query.start != null && req.query.start != '' && 
+      req.query.start != 'Any') {
     opts.start = req.query.start;
   }
-  if (req.query.end != null && req.query.end != '') {
+  if (req.query.end != null && req.query.end != '' &&
+      req.query.end != 'Any') {
     opts.end = req.query.end;
   }
   if (req.query.seatsAvail != null && req.query.seatsAvail != '') {
@@ -72,12 +78,12 @@ module.exports.search = function(req, res) {
   }
   console.log(opts);
   // run the query
-  dbAccess.get(opts, false, function(err, docs) {
+  dbAccess.get(opts, false, function(err, courses) {
     if (err) {
       console.log('ho someting wen break.');
       console.log(err);
     } else {
-      res.json(docs);
+      res.render('table', {courses: courses});
     }
   });
 };

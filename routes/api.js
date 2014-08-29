@@ -76,6 +76,9 @@ module.exports.search = function(req, res) {
   if (req.query.seatsAvail != null && req.query.seatsAvail != '') {
     opts.seatsAvail = true;
   }
+  if (req.query.instructor != null && req.query.instructor != '') {
+    opts.instructor = req.query.instructor;
+  }
   console.log(opts);
   // run the query
   dbAccess.get(opts, false, function(err, courses) {

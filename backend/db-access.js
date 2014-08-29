@@ -166,6 +166,13 @@ function get(searchOpts, useTestDb, callback) {
           "mtgTime.end": {'$regex': value}
         }); 
 
+      }     
+      if (key == 'instructor') {
+        // Example valid mtgTime.end:   '0900a'.  
+        conditionList.push({
+          "instructor": {'$regex': value}
+        }); 
+
       }      
     } // end for
 
@@ -174,7 +181,8 @@ function get(searchOpts, useTestDb, callback) {
     } else if (conditionList.length == 1) {
       query.where(conditionList[0]);
     } else {
-      // this should never happen
+      // this should never happen unless data is passed to us
+      // in a non-standard way (i.e. NOT from the browser..)
       mongoose.disconnect();
       callback({message:'noCriteriaGiven'});
     }

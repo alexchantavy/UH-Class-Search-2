@@ -28,7 +28,7 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
 app.get('/api/courses.json', api.courses);
-app.get('/api/search', api.search);
+app.get('/search', api.search);
 app.get('/about', function(req, res) {
   res.render('about');
 });

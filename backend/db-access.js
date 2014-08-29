@@ -170,7 +170,7 @@ function get(searchOpts, useTestDb, callback) {
       if (key == 'instructor') {
         // Example valid mtgTime.end:   '0900a'.  
         conditionList.push({
-          "instructor": {'$regex': value}
+          "instructor": {'$regex': value, '$options': 'i'}
         }); 
 
       }      
@@ -194,7 +194,7 @@ function get(searchOpts, useTestDb, callback) {
       } else { 
         callback(null, docs);
       }
-       
+
     });
   });
 }

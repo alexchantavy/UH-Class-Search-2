@@ -194,7 +194,7 @@ function get(searchOpts, useTestDb, callback) {
       } else { 
         callback(null, docs);
       }
-      
+       
     });
   });
 }

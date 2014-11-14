@@ -118,7 +118,7 @@ function get(searchOpts, useTestDb, callback) {
 
     for (var key in searchOpts) {
       var value = searchOpts[key];
-      
+      //console.log(key);
       if (key == 'genEdFocus') {
         conditionList.push({ 
           "genEdFocus" : value 

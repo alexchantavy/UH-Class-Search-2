@@ -10,7 +10,7 @@
     "chai"
   ],
   "scripts": {
-    "test": "mocha -R spec && karma start test/karma.conf.js",
+    "test": "mocha -R spec",
     "start": "node app.js"
   },
   "author": {

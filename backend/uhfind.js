@@ -3,7 +3,7 @@
 
 function UHFinder(baseUrl) {
   this.baseUrl = typeof baseUrl !== 'undefined' ?  baseUrl :
-            'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201510&s=';
+            'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201530&s=';
 
   this.departments = ["ACC", "ACM", "AMST", "ANAT",
         "ANSC", "ANTH", "APDM", "ARAB", "ARCH", "ART", "AS", "ASAN", "ASTR",

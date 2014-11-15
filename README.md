@@ -1,7 +1,7 @@
 uh-class-search-2
 =================
 
-Graduate faster with this UH class searcher. 
+Graduate faster with this UH class searcher.  Live online [here](http://uhfind.alexchantavy.com).
 
 1. Screen scrapes UH class page with phantomjs
 2. Stores results in local MongoDB instance
@@ -11,6 +11,7 @@ Graduate faster with this UH class searcher.
 Creative Commons Attribution Non-Commercial
 
 https://tldrlegal.com/license/creative-commons-attribution-noncommercial-(cc-nc)#fulltext
+
 
 # Install Requirements
 1. Locally running MongoDB instance

@@ -1,4 +1,10 @@
-/* Database access module */
+/* 
+Database access module 
+
+This module provides all methods necessary to retrieve and update reords from
+the database.  
+
+*/
 
 var mongoose = require('mongoose'),
     fs       = require('fs'),

@@ -1,9 +1,30 @@
 
 // module that is meant to be run from phantomjs and not node!
 
-function UHFinder(baseUrl) {
+function UHFinder( baseUrl ) {
   this.baseUrl = typeof baseUrl !== 'undefined' ?  baseUrl :
             'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201530&s=';
+
+
+/*
+
+proposed idea for new structured
+
+[
+{
+  'manoa': 
+  {
+    'url': [...]
+    'departments': [...]  
+  }
+}
+
+kcc:
+lcc 
+]
+
+
+*/
 
   this.departments = ["ACC", "ACM", "AMST", "ANAT",
         "ANSC", "ANTH", "APDM", "ARAB", "ARCH", "ART", "AS", "ASAN", "ASTR",

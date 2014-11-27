@@ -37,11 +37,11 @@ var Course = mongoose.model('Course', courseSchema);
   getAllCourses: retrieves records of all courses from the database.
   @param callback: run this after we have saved everything
 */
-function getAllCourses(useTestDb, callback) {
-  var username =     (useTestDb)? cfg.testdb.username : cfg.db.username
-  ,   password =     (useTestDb)? cfg.testdb.password : cfg.db.password
-  ,   databaseName = (useTestDb)? 'uhfind-test'       : 'uhfind';
-  if (useTestDb) {
+function getAllCourses( callback ) {
+  var username =     (cfg.useTestDb)? cfg.testdb.username : cfg.db.username
+  ,   password =     (cfg.useTestDb)? cfg.testdb.password : cfg.db.password
+  ,   databaseName = (cfg.useTestDb)? 'uhfind-test'       : 'uhfind';
+  if (cfg.useTestDb) {
     console.log("attempting to connect to test db...");
   }
   mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
@@ -78,7 +78,7 @@ Examples:
 @param callback   a callback
 
 */
-function get(searchOpts, useTestDb, callback) {
+function get(searchOpts, callback) {
   /*var validProps = [
     "course",
     "credits",
@@ -101,9 +101,9 @@ function get(searchOpts, useTestDb, callback) {
     callback({message:'noCriteriaGiven'});
   }
 
-  var username = (useTestDb)? cfg.testdb.username : cfg.db.username
-  ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
-  ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
+  var username = (cfg.useTestDb)? cfg.testdb.username : cfg.db.username
+  ,   password = (cfg.useTestDb)? cfg.testdb.password : cfg.db.password
+  ,   databaseName = (cfg.useTestDb)? 'uhfind-test' : 'uhfind';
 
   //if (useTestDb) {
     mongoose.set('debug', true);
@@ -210,13 +210,13 @@ function get(searchOpts, useTestDb, callback) {
   @param catalog: an array of courses returned from UHFind.fetchDeptCourses().
   @param callback: run this after we have saved everything
 */
-function saveCourseArray(catalog, useTestDb, callback) {
+function saveCourseArray(catalog, callback) {
   if ( ! Array.isArray(catalog)) {
     callback('catalog is not an array');
   } else {
-    var username = (useTestDb)? cfg.testdb.username : cfg.db.username
-    ,   password = (useTestDb)? cfg.testdb.password : cfg.db.password
-    ,   databaseName = (useTestDb)? 'uhfind-test' : 'uhfind';
+    var username = (cfg.useTestDb)? cfg.testdb.username : cfg.db.username
+    ,   password = (cfg.useTestDb)? cfg.testdb.password : cfg.db.password
+    ,   databaseName = (cfg.useTestDb)? 'uhfind-test' : 'uhfind';
 
     mongoose.connect('mongodb://' + cfg.hostname + '/' + databaseName, {
       user: username,

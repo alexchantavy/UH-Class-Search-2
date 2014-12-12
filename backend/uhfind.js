@@ -152,41 +152,17 @@ function UHFinder(baseUrl) {
 
         // setting these to null so it doesnt mess up the mongoose.js schema.
         // fuck.
-        course.waitListed = null;
-        course.waitAvail = null;
-
-        course.mtgTime       = [];       
-        course.mtgTime.push({
-                              'days'  : processDayString(rows[i].cells[8].textContent), 
-                              'start' : getTime('start', rows[i].cells[9].textContent),
-                              'end'   : getTime( 'end' , rows[i].cells[9].textContent),
-                              'loc'   : rows[i].cells[10].textContent,
-                              'dates' : rows[i].cells[11].textContent
-                            });        
-          
-        // If there are additional meeting times, add them.
-        // We can tell this by checking if <tr.class> changes.
-        while (rows[i+1] && rows[i].className === rows[i+1].className) {
-          i++;
-          course.mtgTime.push({
-                                'days'  : processDayString(rows[i].cells[7].textContent),
-                                'start' : getTime('start', rows[i].cells[8].textContent),
-                                'end'   : getTime( 'end' , rows[i].cells[8].textContent),
-                                'loc'   : rows[i].cells[9].textContent,
-                                'dates' : rows[i].cells[10].textContent
-                              });        
-
-        // BEGIN OLD CODE WITH WAITLIST COLUMNS FOR USE BEFORE REGISTRATION
-        // course.waitListed    =   rows[i].cells[8].textContent; 
-        // course.waitAvail     =   rows[i].cells[9].textContent;
+        // BEGIN OLD CODE WITHOUT WAITLIST COLUMNS 
+        // course.waitListed = null;
+        // course.waitAvail = null;
 
         // course.mtgTime       = [];       
         // course.mtgTime.push({
-        //                       'days'  : processDayString(rows[i].cells[10].textContent), 
-        //                       'start' : getTime('start', rows[i].cells[11].textContent),
-        //                       'end'   : getTime( 'end' , rows[i].cells[11].textContent),
-        //                       'loc'   : rows[i].cells[12].textContent,
-        //                       'dates' : rows[i].cells[13].textContent
+        //                       'days'  : processDayString(rows[i].cells[8].textContent), 
+        //                       'start' : getTime('start', rows[i].cells[9].textContent),
+        //                       'end'   : getTime( 'end' , rows[i].cells[9].textContent),
+        //                       'loc'   : rows[i].cells[10].textContent,
+        //                       'dates' : rows[i].cells[11].textContent
         //                     });        
           
         // // If there are additional meeting times, add them.
@@ -194,14 +170,39 @@ function UHFinder(baseUrl) {
         // while (rows[i+1] && rows[i].className === rows[i+1].className) {
         //   i++;
         //   course.mtgTime.push({
-        //                         // '9' because for some reason theres 1 less <td>
-        //                         // in new columns
-        //                         'days'  : processDayString(rows[i].cells[9].textContent),
-        //                         'start' : getTime('start', rows[i].cells[10].textContent),
-        //                         'end'   : getTime( 'end' , rows[i].cells[10].textContent),
-        //                         'loc'   : rows[i].cells[11].textContent,
-        //                         'dates' : rows[i].cells[12].textContent
-        //                       });
+        //                         'days'  : processDayString(rows[i].cells[7].textContent),
+        //                         'start' : getTime('start', rows[i].cells[8].textContent),
+        //                         'end'   : getTime( 'end' , rows[i].cells[8].textContent),
+        //                         'loc'   : rows[i].cells[9].textContent,
+        //                         'dates' : rows[i].cells[10].textContent
+        //                       });        
+
+        // BEGIN OLD CODE WITH WAITLIST COLUMNS FOR USE BEFORE REGISTRATION
+        course.waitListed    =   rows[i].cells[8].textContent; 
+        course.waitAvail     =   rows[i].cells[9].textContent;
+
+        course.mtgTime       = [];       
+        course.mtgTime.push({
+                              'days'  : processDayString(rows[i].cells[10].textContent), 
+                              'start' : getTime('start', rows[i].cells[11].textContent),
+                              'end'   : getTime( 'end' , rows[i].cells[11].textContent),
+                              'loc'   : rows[i].cells[12].textContent,
+                              'dates' : rows[i].cells[13].textContent
+                            });        
+          
+        // If there are additional meeting times, add them.
+        // We can tell this by checking if <tr.class> changes.
+        while (rows[i+1] && rows[i].className === rows[i+1].className) {
+          i++;
+          course.mtgTime.push({
+                                // '9' because for some reason theres 1 less <td>
+                                // in new columns
+                                'days'  : processDayString(rows[i].cells[9].textContent),
+                                'start' : getTime('start', rows[i].cells[10].textContent),
+                                'end'   : getTime( 'end' , rows[i].cells[10].textContent),
+                                'loc'   : rows[i].cells[11].textContent,
+                                'dates' : rows[i].cells[12].textContent
+                              });
         // END OLD CODE WITH WAITLIST COLUMNS FOR USE BEFORE REGISTRATION
         /**END HACKY CODE**/
         }

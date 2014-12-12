@@ -7,10 +7,9 @@ work with phantomjs.
 
 */
 //remember that phantom's `fs` is NOT node's `fs`.
-var async   = require('async')
-,   fs      = require('fs')
-,   UHFind  = require('./uhfind.js')
-,   uhfind  = new UHFind();
+var async         = require('async')
+,   fs            = require('fs')
+,   fetchCourses  = require('./uhfind.js');
 
 
 var uhSystem = [{
@@ -124,8 +123,8 @@ var uhSystem = [{
     'REL', 'SSCI', 'SW', 'SOC', 'SPAN', 'SP', 'THEA', 'ZOOL']
 }];
 
-function getClasses(dept, callback) {
-  uhfind.fetchDeptCourses(dept, function(err, result) {
+function getClasses(campus, dept, callback) {
+  fetchCourses(campus, dept, function(err, result) {
     if (err) {
       callback(err);
     } else {
@@ -148,6 +147,19 @@ async.eachLimit(
 
   // do this for each department
   function(dept, callback) {
+
+
+    fetchCourses(campus, dept, function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        // concatenate data without producing new array
+        results.push.apply(results, data);
+      }
+      // required for `async`
+      callback();
+    });
+
     getClasses( dept, function(err, data) {
       if (err) {
         console.log(err);

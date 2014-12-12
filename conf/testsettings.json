@@ -1,0 +1,21 @@
+{
+  "hostname": "alexchantavy.com",
+  "db": {
+    "username": "uhfind",
+    "password": "forestking1!",
+    "database": "uhfind"
+  },
+  "useTestDb": true,
+  "testdb": {
+    "username": "uhfind-test",
+    "password": "forestkingtester1!",
+    "database": "uhfind-test"
+  },
+  "dbAdminSettings": {
+    "user": "root",
+    "pwd": "pathofwind1!"
+  },
+  "shitTodo": [
+    "parameterize 'test' mode in db-access functions. having it in config file is a bad idea"
+  ]
+}

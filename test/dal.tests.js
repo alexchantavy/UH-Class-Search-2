@@ -3,7 +3,8 @@
 var chai = require('chai'),
     expect = chai.expect,
     should = chai.should(),
-    dal = require('../backend/db-access');
+    dal = require('../backend/db-access'),
+    cfg = require('../conf/testsettings');
 chai.use(require('chai-things'));
 
 

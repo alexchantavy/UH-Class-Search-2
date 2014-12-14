@@ -1,8 +1,11 @@
 extend layout
 block content
   p #{courses.length} matching classes found. 
+  p
+    a(role='button', class='btn btn-success btn-large btn-lg', href='/')
+      span(class='glyphicon glyphicon-arrow-left', aria-hidden='true') Back
   if (courses.length > 0)
-    table(class='table table-hover table-striped')
+    table(class='table table-striped')
       thead
         th Course
         th Title

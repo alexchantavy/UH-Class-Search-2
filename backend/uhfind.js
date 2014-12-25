@@ -1,27 +1,32 @@
-// module that is meant to be run from phantomjs and not node!
+// this module is meant to be run from phantomjs and not node!
 
-function UHFinder(baseUrl) {
-  this.baseUrl = typeof baseUrl !== 'undefined' ?  baseUrl :
-            'https://www.sis.hawaii.edu/uhdad/avail.classes?i=MAN&t=201530&s=';
 
-  this.departments = ["ACC", "ACM", "AMST", "ANAT",
-        "ANSC", "ANTH", "APDM", "ARAB", "ARCH", "ART", "AS", "ASAN", "ASTR",
-        "BE", "BIOC", "BIOL", "BIOM", "BLAW", "BOT", "BUS", "CAAM", "CAM",
-        "CAS", "CEE", "CHAM", "CHEM", "CHN", "CIS", "CMB", "COM", "CSD",
-        "CUL", "DH", "DIS", "DNCE", "DRB", "EALL", "ECON", "EDCS", "EDEA",
-        "EDEF", "EDEP", "EE", "ELI", "ENG", "ENGR", "ES", "ETEC", "FAMR",
-        "FIL", "FIN", "FMCH", "FR", "FSHN", "GEOG", "GER", "GERI", "GG",
-        "GRK", "HAW", "HIST", "HNDI", "HON", "HRM", "HWST", "ICS", "ILO",
-        "IND", "INS", "IP", "IS", "ITAL", "ITE", "ITM", "JOUR", "JPN", "KOR",
-        "KRS", "LAIS", "LATN", "LAW", "LING", "LIS", "LLEA", "LLL", "LLM",
-        "LWEV", "LWJT", "LWLW", "LWPA", "LWUL", "MAO", "MATH", "MBBE", "MDED",
-        "ME", "MED", "MEDT", "MET", "MGT", "MICR", "MKT", "MSL", "MUS", "NHH",
-        "NREM", "NURS", "OBGN", "OCN", "OEST", "ORE", "PACE", "PACS", "PATH",
-        "PED", "PEPS", "PH", "PHIL", "PHRM", "PHYL", "PHYS", "PLAN", "POLS",
-        "PORT", "PPC", "PPST", "PSTY", "PSY", "PUBA", "RE", "REL", "REPR",
-        "RUS", "SAM", "SLS", "SNSK", "SOC", "SOCS", "SP", "SPAN", "SPED",
-        "SURG", "SW", "TAHT", "THAI", "THEA", "TI", "TIM", "TONG", "TPSS",
-        "TRMD", "VIET", "WS", "ZOOL"];
+/*
+ fetchCourses
+
+ Scrapes the UH catalog webpage of the given campus and the given department and
+ if successful returns data to a callback.
+
+ @param campus The 3 character code used by UH's catalog url to identify a
+ campus, e.g. 'MAN' = UH Manoa, 'KAP' = Kapiolani Community College, etc.
+
+ @param dept The 2-4 character code used by UH's catalog url to identify a
+ department, e.g. 'ICS' = Computer Science, 'MATH' = Math... etc.
+
+ @param callback(error, data):  A callback function that handles error from this
+ function or processes results of the query.
+*/
+function fetchCourses( campus, dept, callback ) {
+
+  if ( campus != 'HON' || campus != 'KAU' || campus != 'LEE' ||
+       campus != 'HIL' || campus != 'MAN' || campus != 'KAP' ||
+       campus != 'MAU' || campus != 'WOA' || campus != 'WIN'  ) {
+      callback('campus field ' + campus + ' is invalid');
+   }
+
+  if ( typeof callback != 'function' ) {
+    callback('callback argument is not a function');
+  }
 
   var page = require('webpage').create();
 

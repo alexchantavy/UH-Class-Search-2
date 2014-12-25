@@ -19,9 +19,10 @@
 */
 function fetchCourses( campus, dept, callback ) {
 
-  if ( campus != 'HON' || campus != 'KAU' || campus != 'LEE' ||
-       campus != 'HIL' || campus != 'MAN' || campus != 'KAP' ||
-       campus != 'MAU' || campus != 'WOA' || campus != 'WIN'  ) {
+  if ( campus != 'HON' && campus != 'KAU' && campus != 'LEE' &&
+       campus != 'HIL' && campus != 'MAN' && campus != 'KAP' &&
+       campus != 'MAU' && campus != 'WOA' && campus != 'WIN' &&
+       campus != 'HAW' ) {
       callback('campus field ' + campus + ' is invalid');
    }
 
@@ -119,7 +120,7 @@ function fetchCourses( campus, dept, callback ) {
     for (var i = 2; i < rows.length; i++) {
 
       var course = {};
-      course.campus = campus;
+//      course.campus = campus;
       // Edge case 1: skip the section-comments that take up entire rows.  
       if ( ! isSubstring(rows[i].className, 'section-comment-course')) { 
         

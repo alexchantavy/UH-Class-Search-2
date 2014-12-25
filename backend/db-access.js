@@ -119,88 +119,87 @@ function get(searchOpts, callback) {
   db.once('open', function() {
 
     // Query builder.
-    var query = Course.find();
-    var conditionList = [];
+    var query = { $and: [] };
 
     for (var key in searchOpts) {
+
       var value = searchOpts[key];
       //console.log(key);
       if (key == 'genEdFocus') {
-        conditionList.push({ 
-          "genEdFocus" : value 
-        });
-
+        // little bit of data structure manipulation
+        for (var focus in value) {
+          if (value[focus] != 'Any' && value[focus] != '--') {
+            query.$and.push({ 
+              'genEdFocus': value[focus] 
+            });
+          }
+        }
       } 
+
       if (key == 'days') {
-        conditionList.push({
+        query.$and.push({
           "mtgTime.days": value
         });
-        
       } 
+
       if (key == 'course') {
-        conditionList.push({
+        query.$and.push({
           "course": { '$regex': value }
         });    
-
       } 
+
       if (key == 'credits') {
         // can only match credit counts with regex because some
         // of the data contains values like '1-5'.
-        conditionList.push({
+        query.$and.push({
           "credits": { '$regex': value }
         }); 
-
       } 
+
       if (key == 'seatsAvail') {
         if (value == true) {
-          conditionList.push({
+          query.$and.push({
             "seatsAvail": { '$gt': 0 }
           }); 
         }
-
       } 
+
       if (key == 'start' ) {
         // Example valid mtgTime.start: '0900'.
-        conditionList.push({
+        query.$and.push({
           "mtgTime.start" : {'$regex': value}
         })
-
       } 
+
       if (key == 'end') {
         // Example valid mtgTime.end:   '0900a'.  
-        conditionList.push({
+        query.$and.push({
           "mtgTime.end": {'$regex': value}
         }); 
-
       }     
+
       if (key == 'instructor') {
         // Example valid mtgTime.end:   '0900a'.  
-        conditionList.push({
+        query.$and.push({
           "instructor": {'$regex': value, '$options': 'i'}
         }); 
+      }     
 
-      }      
     } // end for
 
-    if (conditionList.length > 1) {
-      query.and(conditionList);
-    } else if (conditionList.length == 1) {
-      query.where(conditionList[0]);
-    } else {
-      // this should never happen unless data is passed to us
-      // in a non-standard way (i.e. NOT from the browser..)
+    // disallow empty queries
+    if (query.$and.length == 0) {
       mongoose.disconnect();
       callback({message:'noCriteriaGiven'});
     }
 
-    query.sort({'course': 1}).select().exec(function(err, docs) {  
+    Course.find(query).sort({'course': 1}).select().exec(function(err, docs) {  
       mongoose.disconnect();
       if (err) {
         callback(err);
       } else { 
         callback(null, docs);
       }
-
     });
   });
 }

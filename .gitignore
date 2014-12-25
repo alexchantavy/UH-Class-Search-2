@@ -6,3 +6,5 @@ bower_components/
 .png%
 conf/settings.json
 .tmp
+.log
+data.json

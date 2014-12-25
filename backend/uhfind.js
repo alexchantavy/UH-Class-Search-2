@@ -4,6 +4,7 @@
 /*
  fetchCourses
 
+  // get all classes in given department, return data to a callback.
  Scrapes the UH catalog webpage of the given campus and the given department and
  if successful returns data to a callback.
 
@@ -30,29 +31,26 @@ function fetchCourses( campus, dept, callback ) {
 
   var page = require('webpage').create();
 
-  // get all classes in given department, return data to a callback.
-  this.fetchDeptCourses = function(dept, callback) {
-    
-    var url = this.baseUrl + dept;
 
-    page.onResourceError = function(resourceError) {
-      page.reason = resourceError.errorString;
-      page.reason_url = resourceError.url;
-    };
+  var url = 'https://www.sis.hawaii.edu/uhdad/avail.classes?i=' + campus + '&t=201530&s=' + dept;
 
-    page.open(url, function(status) {
-      if (status === 'success') {
-        console.log('opened ' + url);
-        var result = page.evaluate(scrapeDom);
-    
-        callback(null, result);
-
-      } else {
-        callback(page.reason_url + " " + page.reason); 
-      }
-
-    });
+  page.onResourceError = function(resourceError) {
+    page.reason = resourceError.errorString;
+    page.reason_url = resourceError.url;
   };
+
+  page.open(url, function(status) {
+    if (status === 'success') {
+      console.log('opened ' + url);
+      var result = page.evaluate(scrapeDom);
+
+      callback(null, result);
+
+    } else {
+      callback(page.reason_url + " " + page.reason); 
+    }
+
+  });
 
   // scrape dat DOM.  private helper function.
   var scrapeDom = function() {
@@ -121,7 +119,7 @@ function fetchCourses( campus, dept, callback ) {
     for (var i = 2; i < rows.length; i++) {
 
       var course = {};
-
+      course.campus = campus;
       // Edge case 1: skip the section-comments that take up entire rows.  
       if ( ! isSubstring(rows[i].className, 'section-comment-course')) { 
         
@@ -219,4 +217,4 @@ function fetchCourses( campus, dept, callback ) {
 }
 
 
-module.exports = UHFinder;
+module.exports = fetchCourses;

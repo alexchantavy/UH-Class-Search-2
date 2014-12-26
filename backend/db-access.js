@@ -194,8 +194,9 @@ function get(searchOpts, useTestDb, callback) {
 
     } // end for
 
-    // disallow empty queries
-    if (query.$and.length == 0) {
+    // disallow empty queries or those that enumerate an entire campus
+    if (query.$and.length == 0 || 
+        (query.$and.length == 1 && query.$and[0].campus)) {
       mongoose.disconnect();
       callback({message:'noCriteriaGiven'});
     }

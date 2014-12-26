@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
     cfg      = require('../conf/settings.json');
 
 var courseSchema = mongoose.Schema({
+    campus:       String,
     course:       String,
     credits:      mongoose.Schema.Types.Mixed,
     crn:          Number,

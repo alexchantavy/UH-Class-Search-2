@@ -9,10 +9,15 @@ work with phantomjs.
 //remember that phantom's `fs` is NOT node's `fs`.
 var async         = require('async')
 ,   fs            = require('fs')
-,   fetchCourses  = require('./uhfind.js');
+,   fetchCourses  = require('./uhfind.js')
+,   system        = require('system');
 
+if (system.args.length == 1) {
+  console.log('specify 0 (first half of uh system) or 1 (second half of uh system) as command line arg.');
+  phantom.exit();
+}
 
-var uhSystem = 
+var uhSystemFirstHalf = 
 [
   {
     campus: 'HAW',
@@ -65,8 +70,10 @@ var uhSystem =
       'HORT', 'KIND', 'IS', 'JPNS', 'JPST', 'KES', 'LANG', 'LING', 'MGT', 'MARE', 
       'MKT', 'MATH', 'MSL', 'MUS', 'NRES', 'NURS', 'PHPS', 'PHPP', 'PHIL', 'PHYS',
       'PPTH', 'POLS', 'PSY', 'QBA', 'SOC', 'SOIL', 'SPAN', 'TOUR', 'CBES', 'WS']
-  },
-  
+  }];
+
+var uhSystemSecondHalf = 
+[
   {
     campus: 'MAN', 
     departments: ['ACM', 'ACC', 'AS', 'AMST', 'ANAT', 'ANSC', 'ANTH', 'ARAB', 
@@ -177,9 +184,13 @@ var processSchool = function(school, cb) {
     );
 };
 
+// phantom doesn't work if i give it all the data at once for some reason
+// so i need to split it into two halves.
+var dataset = (system.args[1] == 0)? uhSystemFirstHalf : uhSystemSecondHalf;
+
 // for each school in the uh system
 async.eachLimit(
-  uhSystem, 
+  dataset, 
   MAX_CONCURRENT,
   processSchool,
   function(err) {    

@@ -50,6 +50,45 @@ module.exports.search = function(req, res) {
   // build our options object from the get params
 
   var opts = {};
+
+  if (req.query.campus != null) {
+    switch(req.query.campus) {
+      case 'Any':
+        break;
+      case 'UH Manoa': 
+        opts.campus = 'MAN';
+        break;
+      case 'Hawaii CC': 
+        opts.campus = 'HAW';
+        break;
+      case 'Honolulu CC': 
+        opts.campus = 'HON';
+        break;
+      case 'Kauai CC': 
+        opts.campus = 'KAU';
+        break;
+      case 'Leeward CC': 
+        opts.campus = 'LEE';
+        break;
+      case 'UH Hilo': 
+        opts.campus = 'HIL';
+        break;
+      case 'Kapiolani CC': 
+        opts.campus = 'KAP';
+        break;                        
+      case 'Maui CC': 
+        opts.campus = 'MAU';
+        break;            
+      case 'UH West Oahu': 
+        opts.campus = 'WOA';
+        break;            
+      case 'Windward CC': 
+        opts.campus = 'WIN';
+        break;            
+      default: break;
+    }
+  }
+
   if (req.query.genEdFocus != null && req.query.genEdFocus != '' &&
       req.query.genEdFocus != 'Any') {
     opts.genEdFocus = req.query.genEdFocus;

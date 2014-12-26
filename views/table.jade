@@ -7,6 +7,7 @@ block content
   if (courses.length > 0)
     table(class='table table-striped')
       thead
+        th Campus
         th Course
         th Title
         th Seats Avail
@@ -19,6 +20,7 @@ block content
       tbody
       each item in courses
         tr
+          td= item.campus
           td= item.course
           td= item.title
           td= item.seatsAvail

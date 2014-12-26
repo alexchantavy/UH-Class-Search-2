@@ -2,127 +2,236 @@ extend layout
 block content
   form(role='form', method="get", action="/search")
     div(class='form-group')
+      label(for='campus') Campus
+      select(class='form-control', name='campus', id='campus')
+        option Any
+        option UH Manoa
+        option Hawaii CC
+        option Honolulu CC
+        option Kauai CC
+        option Leeward CC
+        option UH Hilo
+        option Kapiolani CC
+        option Maui CC
+        option UH West Oahu
+        option Windward CC
+    div(class='form-group')
       label(for="course") Course Designator
       select(class='form-control', name='course', id="course")
         option Any
-        option ACC 
+        option ABRP
+        option ACC
         option ACM
+        option AEC
+        option AERO
+        option AG
+        option AGBU
+        option AGEC
+        option AGEN
+        option AJ
         option AMST
+        option AMT
         option ANAT
         option ANSC
         option ANTH
-        option APDM
+        option APSC
+        option AQUA
         option ARAB
         option ARCH
         option ART
         option AS
         option ASAN
+        option ASL
         option ASTR
+        option AVIT
         option BE
         option BIOC
         option BIOL
         option BIOM
         option BLAW
+        option BLPR
         option BOT
         option BUS
-        option CAAM
+        option BUSA
+        option BUSN
+        option CA
+        option CAD
         option CAM
-        option CAS
+        option CARP
+        option CASE
+        option CBES
+        option CE
         option CEE
+        option CENT
         option CHAM
         option CHEM
         option CHN
+        option CHNS
         option CIS
+        option CM
         option CMB
+        option CMGT
         option COM
+        option COMG
+        option COSM
+        option CS
         option CSD
         option CUL
+        option CULN
+        option DEAF
+        option DENT
         option DH
+        option DIMC
         option DIS
+        option DISL
+        option DMED
         option DNCE
+        option DRAM
         option DRB
+        option EALA
         option EALL
+        option EBUS
+        option ECED
+        option ECOM
         option ECON
+        option ED
         option EDCS
         option EDEA
+        option EDEE
         option EDEF
         option EDEP
+        option EDUC
         option EE
+        option EIMT
+        option ELEC
         option ELI
+        option EMT
         option ENG
         option ENGR
+        option ENRG
+        option ENSC
+        option ENT
+        option ENTO
         option ES
+        option ESL
+        option ESOL
+        option ESS
         option ETEC
+        option ETRO
         option FAMR
+        option FDM
+        option FENG
         option FIL
         option FIN
+        option FIRE
         option FMCH
+        option FOR
         option FR
+        option FSHE
         option FSHN
+        option FT
         option GEOG
+        option GEOL
         option GER
         option GERI
         option GG
+        option GHPS
+        option GIS
         option GRK
         option HAW
+        option HD
         option HIST
+        option HIT
+        option HLTH
         option HNDI
         option HON
+        option HORT
+        option HOST
+        option HPER
+        option HPST
         option HRM
+        option HSER
+        option HUM
         option HWST
         option ICS
+        option IED
+        option IEDD
         option ILO
         option IND
-        option INS
         option IP
         option IS
+        option ISA
         option ITAL
         option ITE
         option ITM
+        option ITS
         option JOUR
         option JPN
+        option JPNS
+        option JPST
+        option KED
+        option KES
+        option KHAW
+        option KHWS
+        option KIND
+        option KLS
         option KOR
         option KRS
         option LAIS
+        option LANG
         option LATN
         option LAW
         option LING
         option LIS
         option LLEA
-        option LLL
-        option LLM
+        option LSK
         option LWEV
         option LWJT
         option LWLW
         option LWPA
-        option LWUL
+        option MAIN
         option MAO
+        option MARE
+        option MARR
         option MATH
         option MBBE
+        option MBIO
+        option MCB
         option MDED
         option ME
         option MED
+        option MEDA
         option MEDT
+        option MELE
         option MET
         option MGT
         option MICR
+        option MICT
         option MKT
+        option MLT
         option MSL
         option MUS
+        option MWIM
         option NHH
         option NREM
+        option NRES
         option NURS
         option OBGN
         option OCN
-        option OEST
+        option OESM
         option ORE
+        option OTA
         option PACE
         option PACS
         option PATH
+        option PBT
         option PED
         option PEPS
+        option PERS
         option PH
         option PHIL
+        option PHPP
+        option PHPS
         option PHRM
         option PHYL
         option PHYS
@@ -130,33 +239,54 @@ block content
         option POLS
         option PORT
         option PPC
-        option PPST
+        option PPTH
         option PSTY
         option PSY
+        option PTA
         option PUBA
+        option QBA
+        option QM
+        option RAC
+        option RAD
         option RE
         option REL
-        option REPR
+        option RESP
         option RUS
         option SAM
+        option SCFS
+        option SCI
         option SLS
+        option SLT
+        option SMKT
+        option SMP
         option SNSK
         option SOC
         option SOCS
+        option SOIL
+        option SOSE
         option SP
         option SPAN
+        option SPCO
         option SPED
+        option SSCI
+        option SSM
+        option SUBS
         option SURG
         option SW
+        option TAG
         option TAHT
         option THAI
         option THEA
         option TI
         option TIM
         option TONG
+        option TOUR
         option TPSS
         option TRMD
+        option TVPR
+        option URDU
         option VIET
+        option WELD
         option WS
         option ZOOL
     div(class="form-group")

@@ -125,6 +125,12 @@ function get(searchOpts, useTestDb, callback) {
     for (var key in searchOpts) {
 
       var value = searchOpts[key];
+
+      console.log(key);
+      if (key == 'campus') {
+        query.$and.push({'campus': value});
+      }
+
       //console.log(key);
       if (key == 'genEdFocus') {
         // little bit of data structure manipulation

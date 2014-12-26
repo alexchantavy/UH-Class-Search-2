@@ -172,7 +172,7 @@ var processSchool = function(school, cb) {
          cb();
       }
     );
-}
+};
 
 // for each school in the uh system
 async.eachLimit(

@@ -43,7 +43,10 @@ function fetchCourses( campus, dept, callback ) {
   page.open(url, function(status) {
     if (status === 'success') {
       console.log('opened ' + url);
-      var result = page.evaluate(scrapeDom);
+      var includeWaitListColumns = true;
+      var result = page.evaluate( scrapeDom
+                                , includeWaitListColumns
+                                , campus );
 
       callback(null, result);
 
@@ -54,7 +57,7 @@ function fetchCourses( campus, dept, callback ) {
   });
 
   // scrape dat DOM.  private helper function.
-  var scrapeDom = function() {
+  var scrapeDom = function( includeWaitListColumns, campus ) {
 
     // return true if $test is a substring in $string
     var isSubstring = function(string, test) {
@@ -118,18 +121,20 @@ function fetchCourses( campus, dept, callback ) {
 
     // Iterate through the <tr>s starting at index 2 to skip the header rows.
     for (var i = 2; i < rows.length; i++) {
-
+      console.log(i);
       var course = {};
-//      course.campus = campus;
+      course.campus = campus;
       // Edge case 1: skip the section-comments that take up entire rows.  
-      if ( ! isSubstring(rows[i].className, 'section-comment-course')) { 
+      if ( ! isSubstring(rows[i].className, 'section-comment-course') &&
+             rows[i].cells.length != 1 ) { 
         
         // Edge case 2: sometimes UH class listings like to 
-        // put in a special note for a class that spans 2 <td>s.
+        // put in a special note for a class that spans 1 or 2 <td>s.
         if (rows[i].cells.length == 2) { 
           course.extraNotes = rows[i].cells[1].textContent;
           i++; 
-        }
+        } 
+
         course.genEdFocus    =  [];
         // check for `&nbsp;` using char code 0xA0
         course.genEdFocus    =  (rows[i].cells[0].textContent == '\xA0') ? 
@@ -144,70 +149,80 @@ function fetchCourses( campus, dept, callback ) {
                                          'TBA' : 
                                          // get only last name
                                          rows[i].cells[6].textContent.substring(2);
-        course.seatsAvail    =   rows[i].cells[7].textContent
-
-        /** 
-        THIS IS SUPER HACKY AND I WILL FIX IT I AM SORRY.  During Registration 
-        season UH likes to remove the waitlist columns.  rather than deal with it 
-        in a smart way I am simply hardcoding the column indices and commenting out
-        my old code.  I will fix this eventually but honestly can't be bothered.
-        **/
 
         // setting these to null so it doesnt mess up the mongoose.js schema.
         // fuck.
-        // BEGIN OLD CODE WITHOUT WAITLIST COLUMNS 
-        // course.waitListed = null;
-        // course.waitAvail = null;
+        if ( !includeWaitListColumns) {
+          // BEGIN CODE WITHOUT WAITLIST COLUMNS 
+          course.waitListed = null;
+          course.waitAvail = null;
 
-        // course.mtgTime       = [];       
-        // course.mtgTime.push({
-        //                       'days'  : processDayString(rows[i].cells[8].textContent), 
-        //                       'start' : getTime('start', rows[i].cells[9].textContent),
-        //                       'end'   : getTime( 'end' , rows[i].cells[9].textContent),
-        //                       'loc'   : rows[i].cells[10].textContent,
-        //                       'dates' : rows[i].cells[11].textContent
-        //                     });        
-          
-        // // If there are additional meeting times, add them.
-        // // We can tell this by checking if <tr.class> changes.
-        // while (rows[i+1] && rows[i].className === rows[i+1].className) {
-        //   i++;
-        //   course.mtgTime.push({
-        //                         'days'  : processDayString(rows[i].cells[7].textContent),
-        //                         'start' : getTime('start', rows[i].cells[8].textContent),
-        //                         'end'   : getTime( 'end' , rows[i].cells[8].textContent),
-        //                         'loc'   : rows[i].cells[9].textContent,
-        //                         'dates' : rows[i].cells[10].textContent
-        //                       });        
-
-        // BEGIN OLD CODE WITH WAITLIST COLUMNS FOR USE BEFORE REGISTRATION
-        course.waitListed    =   rows[i].cells[8].textContent; 
-        course.waitAvail     =   rows[i].cells[9].textContent;
-
-        course.mtgTime       = [];       
-        course.mtgTime.push({
-                              'days'  : processDayString(rows[i].cells[10].textContent), 
-                              'start' : getTime('start', rows[i].cells[11].textContent),
-                              'end'   : getTime( 'end' , rows[i].cells[11].textContent),
-                              'loc'   : rows[i].cells[12].textContent,
-                              'dates' : rows[i].cells[13].textContent
-                            });        
-          
-        // If there are additional meeting times, add them.
-        // We can tell this by checking if <tr.class> changes.
-        while (rows[i+1] && rows[i].className === rows[i+1].className) {
-          i++;
+          course.mtgTime       = [];       
           course.mtgTime.push({
-                                // '9' because for some reason theres 1 less <td>
-                                // in new columns
-                                'days'  : processDayString(rows[i].cells[9].textContent),
-                                'start' : getTime('start', rows[i].cells[10].textContent),
-                                'end'   : getTime( 'end' , rows[i].cells[10].textContent),
-                                'loc'   : rows[i].cells[11].textContent,
-                                'dates' : rows[i].cells[12].textContent
-                              });
-        // END OLD CODE WITH WAITLIST COLUMNS FOR USE BEFORE REGISTRATION
-        /**END HACKY CODE**/
+                                'days'  : processDayString(rows[i].cells[8].textContent), 
+                                'start' : getTime('start', rows[i].cells[9].textContent),
+                                'end'   : getTime( 'end' , rows[i].cells[9].textContent),
+                                'loc'   : rows[i].cells[10].textContent,
+                                'dates' : rows[i].cells[11].textContent
+                              });        
+            
+          // If there are additional meeting times, add them.
+          // We can tell this by checking if <tr.class> changes.
+          while (rows[i+1] && rows[i].className === rows[i+1].className) {
+            i++;
+            course.mtgTime.push({
+                                  'days'  : processDayString(rows[i].cells[7].textContent),
+                                  'start' : getTime('start', rows[i].cells[8].textContent),
+                                  'end'   : getTime( 'end' , rows[i].cells[8].textContent),
+                                  'loc'   : rows[i].cells[9].textContent,
+                                  'dates' : rows[i].cells[10].textContent
+                                });    
+          }    
+        } else {
+          // BEGIN CODE WITH WAITLIST COLUMNS 
+
+          // Edgecase 2: the CCs have an extra column called 'Curr Enrolled',
+          // but UHM doesn't have this column.
+          var offset = (campus == 'MAN')? 7 : 8;
+          course.seatsAvail    =   rows[i].cells[offset].textContent;
+          course.waitListed    =   rows[i].cells[offset+1].textContent; 
+          course.waitAvail     =   rows[i].cells[offset+2].textContent;
+
+          course.mtgTime       = [];       
+          course.mtgTime.push({
+                                'days'  : processDayString(rows[i].cells[offset+3].textContent), 
+                                'start' : getTime('start', rows[i].cells[offset+4].textContent),
+                                'end'   : getTime( 'end' , rows[i].cells[offset+4].textContent),
+                                'loc'   : rows[i].cells[offset+5].textContent,
+                                'dates' : rows[i].cells[offset+6].textContent
+                              });        
+           
+
+          // If there are additional meeting times, add them.
+          // We can tell this by checking if <tr.class> changes.
+          var hasAdditionalMeetingTimes = function(_campus) {
+            if (_campus == 'MAN') {
+              return rows[i+1] && rows[i].className === rows[i+1].className;
+            } else {
+              return rows[i+1] && 
+                     rows[i].className === rows[i+1].className &&
+                     rows[i].cells.count == rows[i+1].cells.count-1;
+            }  
+          };
+
+          while ( hasAdditionalMeetingTimes(campus) ) {
+            i++;
+            course.mtgTime.push({
+                                  // offset is down by 1 because for some reason theres 1 less <td>
+                                  // in new columns
+                                  'days'  : processDayString(rows[i].cells[offset+2].textContent),
+                                  'start' : getTime('start', rows[i].cells[offset+3].textContent),
+                                  'end'   : getTime( 'end' , rows[i].cells[offset+3].textContent),
+                                  'loc'   : rows[i].cells[offset+4].textContent,
+                                  'dates' : rows[i].cells[offset+5].textContent
+                                });
+          // END CODE WITH WAITLIST COLUMNS
+          }
         }
         catalog.push(course);
       }

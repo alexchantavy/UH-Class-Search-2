@@ -207,21 +207,33 @@ function fetchCourses( campus, dept, callback ) {
             } else {
               return rows[i+1] && 
                      rows[i].className === rows[i+1].className &&
-                     rows[i].cells.count == rows[i+1].cells.count-1;
+                     Math.abs(rows[i].cells.length - rows[i+1].cells.length-1) <= 1; 
             }  
           };
 
           while ( hasAdditionalMeetingTimes(campus) ) {
             i++;
-            course.mtgTime.push({
-                                  // offset is down by 1 because for some reason theres 1 less <td>
-                                  // in new columns
-                                  'days'  : processDayString(rows[i].cells[offset+2].textContent),
-                                  'start' : getTime('start', rows[i].cells[offset+3].textContent),
-                                  'end'   : getTime( 'end' , rows[i].cells[offset+3].textContent),
-                                  'loc'   : rows[i].cells[offset+4].textContent,
-                                  'dates' : rows[i].cells[offset+5].textContent
-                                });
+            if (campus == 'MAN') {
+              course.mtgTime.push({
+                                    // offset is down by 1 because for some reason in manoa theres 1 less <td>
+                                    // in new columns
+                                    'days'  : processDayString(rows[i].cells[offset+2].textContent),
+                                    'start' : getTime('start', rows[i].cells[offset+3].textContent),
+                                    'end'   : getTime( 'end' , rows[i].cells[offset+3].textContent),
+                                    'loc'   : rows[i].cells[offset+4].textContent,
+                                    'dates' : rows[i].cells[offset+5].textContent
+                                  });
+            } else {
+              course.mtgTime.push({
+                      // offset is down by 1 because for some reason in manoa theres 1 less <td>
+                      // in new columns
+                      'days'  : processDayString(rows[i].cells[offset+3].textContent),
+                      'start' : getTime('start', rows[i].cells[offset+4].textContent),
+                      'end'   : getTime( 'end' , rows[i].cells[offset+4].textContent),
+                      'loc'   : rows[i].cells[offset+5].textContent,
+                      'dates' : rows[i].cells[offset+6].textContent
+                    });
+            }
           // END CODE WITH WAITLIST COLUMNS
           }
         }

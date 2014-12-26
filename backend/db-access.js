@@ -28,7 +28,7 @@ var courseSchema = mongoose.Schema({
     seatsAvail:   Number,
     waitListed:   Number,
     waitAvail:    Number,
-    sectionNum:   Number,
+    sectionNum:   mongoose.Schema.Types.Mixed,
     title:        String
 });
 

@@ -66,6 +66,7 @@ var uhSystem =
       'MKT', 'MATH', 'MSL', 'MUS', 'NRES', 'NURS', 'PHPS', 'PHPP', 'PHIL', 'PHYS',
       'PPTH', 'POLS', 'PSY', 'QBA', 'SOC', 'SOIL', 'SPAN', 'TOUR', 'CBES', 'WS']
   },
+  
   {
     campus: 'MAN', 
     departments: ['ACM', 'ACC', 'AS', 'AMST', 'ANAT', 'ANSC', 'ANTH', 'ARAB', 
@@ -150,6 +151,7 @@ var processSchool = function(school, cb) {
       MAX_CONCURRENT,                // The max number of items to execute at once
 
       function(dept, callback) {     // The function to apply to each item in the array
+         
          fetchCourses( school.campus, dept, function(err, data) {
            if (err) {
              console.log(err);
@@ -160,6 +162,7 @@ var processSchool = function(school, cb) {
            // required for `async`
            callback();
          });
+        
       },
 
       function(err) {                // The function to run at the end

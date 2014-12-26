@@ -120,7 +120,8 @@ function fetchCourses( campus, dept, callback ) {
     var catalog = [];
 
     // Iterate through the <tr>s starting at index 2 to skip the header rows.
-    for (var i = 2; i < rows.length; i++) {
+    var row_len = rows.length;
+    for (var i = 2; i < row_len; i++) {
       console.log(i);
       var course = {};
       course.campus = campus;
@@ -181,7 +182,7 @@ function fetchCourses( campus, dept, callback ) {
         } else {
           // BEGIN CODE WITH WAITLIST COLUMNS 
 
-          // Edgecase 2: the CCs have an extra column called 'Curr Enrolled',
+          // Edgecase 3: the CCs have an extra column called 'Curr Enrolled',
           // but UHM doesn't have this column.
           var offset = (campus == 'MAN')? 7 : 8;
           course.seatsAvail    =   rows[i].cells[offset].textContent;

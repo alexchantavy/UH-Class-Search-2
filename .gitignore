@@ -5,6 +5,7 @@ bower_components/
 .gitignore
 .png%
 conf/settings.json
+conf/testsettings.json
 .tmp
 .log
 data.json
